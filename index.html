@@ -1,1 +1,564 @@
-<!DOCTYPE html><html><body><h1>PWA App</h1></body></html>
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>UZMAN Puantaj</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+
+  <style>
+    :root{
+      --bg:#070a12; --panel:#0b1220; --panel2:#0e1a33;
+      --muted:#93a4c7; --text:#e9f0ff;
+      --blue:#2563eb; --blue2:#60a5fa;
+      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+      --line:rgba(255,255,255,.08);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius:18px;
+      --radius2:14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text); font-family:var(--sans);
+      background:
+        radial-gradient(1100px 420px at 20% -5%, rgba(37,99,235,.28), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(96,165,250,.18), transparent 55%),
+        linear-gradient(180deg, #050812, #060818 40%, #050612);
+      overflow:hidden;
+    }
+    a{color:inherit}
+    .app{
+      height:100%;
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap:18px;
+      padding:18px;
+    }
+    .sidebar{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      padding:18px 16px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(37,99,235,.20), rgba(255,255,255,0));
+    }
+    .logo{
+      width:42px; height:42px; border-radius:12px;
+      display:grid; place-items:center;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), rgba(255,255,255,.06)),
+                  linear-gradient(135deg, rgba(37,99,235,.85), rgba(96,165,250,.55));
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .brand h1{font-size:16px; margin:0; letter-spacing:.2px}
+    .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
+    .nav{padding:10px; display:flex; flex-direction:column; gap:6px}
+    .nav button{
+      width:100%; text-align:left; border:1px solid transparent;
+      padding:10px 12px; border-radius:14px;
+      background: transparent; color:var(--text); cursor:pointer;
+      display:flex; align-items:center; gap:10px;
+      transition: .15s ease;
+    }
+    .nav button:hover{background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08)}
+    .nav button.active{background: rgba(37,99,235,.16); border-color: rgba(37,99,235,.35)}
+    .dot{width:10px; height:10px; border-radius:999px; background: rgba(96,165,250,.65); box-shadow:0 0 0 3px rgba(96,165,250,.18)}
+    .nav button .label{flex:1}
+    .nav button .pill{
+      font-size:11px; color:var(--muted); border:1px solid rgba(255,255,255,.10);
+      padding:3px 8px; border-radius:999px; background: rgba(255,255,255,.03)
+    }
+    .sidebar-footer{
+      margin-top:auto; padding:12px 14px; border-top:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      color:var(--muted); font-size:12px;
+      background: rgba(0,0,0,.12);
+    }
+    .main{
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line); border-radius:var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .crumb h2{margin:0; font-size:16px}
+    .crumb p{margin:2px 0 0; color:var(--muted); font-size:12px}
+    .actions{display:flex; gap:10px; align-items:center}
+    .chip{
+      display:flex; align-items:center; gap:8px;
+      padding:9px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03);
+      color:var(--muted); font-size:12px;
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.20)}
+    .btn.primary{background: rgba(37,99,235,.20); border-color: rgba(37,99,235,.45)}
+    .btn.danger{background: rgba(239,68,68,.14); border-color: rgba(239,68,68,.38)}
+    .btn.ok{background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.38)}
+    .content{
+      min-height:0;
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:14px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      min-height:0;
+    }
+    .card .head{
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+    }
+    .card .head h3{margin:0; font-size:14px}
+    .card .head small{color:var(--muted)}
+    .card .body{padding:14px 16px; min-height:0; overflow:auto}
+    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
+    input, select, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      color:var(--text);
+      outline:none;
+    }
+    textarea{min-height:110px; resize:vertical}
+    input:focus, select:focus, textarea:focus{border-color: rgba(96,165,250,.55); box-shadow: 0 0 0 3px rgba(96,165,250,.12)}
+    .hint{font-size:12px; color:var(--muted); margin-top:6px}
+    .alert{
+      margin-top:12px;
+      border:1px solid rgba(239,68,68,.35);
+      background: rgba(239,68,68,.10);
+      padding:10px 12px;
+      border-radius:14px;
+      color: rgba(255,255,255,.92);
+      font-size:12px;
+      display:none;
+      white-space:pre-wrap;
+    }
+    .okline{
+      border:1px solid rgba(34,197,94,.30);
+      background: rgba(34,197,94,.08);
+      padding:10px 12px;
+      border-radius:14px;
+      color: rgba(255,255,255,.92);
+      font-size:12px;
+      display:none;
+    }
+    .kpi{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    }
+    .kpi .box{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      border-radius:16px;
+      padding:12px;
+    }
+    .kpi .box b{display:block; font-size:18px}
+    .kpi .box span{display:block; margin-top:4px; color:var(--muted); font-size:12px}
+    table{width:100%; border-collapse:collapse; font-size:12px}
+    th,td{padding:10px 10px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top}
+    th{color:var(--muted); font-weight:600; text-align:left; position:sticky; top:0; background: rgba(8,10,18,.95); z-index:2}
+    td .mono{font-family:var(--mono)}
+    .badge{
+      font-size:11px; padding:3px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .badge.ok{border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.10); color: rgba(220,255,235,.92)}
+    .badge.bad{border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); color: rgba(255,225,225,.92)}
+    .badge.warn{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); color: rgba(255,246,226,.92)}
+    .split{
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .split > * {flex:1 1 220px}
+    .small{font-size:12px; color:var(--muted)}
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .row .grow{flex:1}
+    .right{margin-left:auto}
+    .hidden{display:none !important}
+    .mobile-only{display:none}
+
+    /* Responsive */
+    @media (max-width: 1000px){
+      body{overflow:auto}
+      .app{grid-template-columns: 1fr; padding:12px; overflow:visible}
+      .sidebar{position:sticky; top:12px; z-index:5}
+      .content{grid-template-columns:1fr}
+      .mobile-only{display:inline-flex}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l8 4v6c0 5-3.2 9.4-8 10-4.8-.6-8-5-8-10V6l8-4z" stroke="white" stroke-opacity=".9" stroke-width="1.5"/>
+            <path d="M8.2 12.2l2.3 2.3 5.3-5.5" stroke="white" stroke-opacity=".95" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>UZMAN Puantaj</h1>
+          <p id="envBadge">PWA • Canlı sürüm</p>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button data-route="home" class="active"><span class="dot"></span><span class="label">Ana Sayfa</span><span class="pill">Giriş</span></button>
+        <button data-route="personnel"><span class="dot"></span><span class="label">Personel</span></button>
+        <button data-route="admin"><span class="dot"></span><span class="label">Admin Paneli</span></button>
+        <button data-route="setup"><span class="dot"></span><span class="label">Kurulum & Ayarlar</span><span class="pill">Supabase</span></button>
+      </div>
+
+      <div class="sidebar-footer">
+        <span id="whoami">—</span>
+        <button id="btnLogout" class="btn hidden">Çıkış</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="crumb">
+          <h2 id="pageTitle">Ana Sayfa</h2>
+          <p id="pageSub">Giriş ve durum</p>
+        </div>
+        <div class="actions">
+          <div class="chip" title="PWA durumu">
+            <span id="pwaDot" class="badge warn">•</span>
+            <span id="pwaText">Service Worker kontrol ediliyor…</span>
+          </div>
+          <button id="btnInstall" class="btn primary hidden">Yükle</button>
+          <button id="btnHardRefresh" class="btn mobile-only">Önbelleği sıfırla</button>
+        </div>
+      </div>
+
+      <section class="content">
+        <!-- LEFT -->
+        <div class="card" id="leftCard">
+          <div class="head">
+            <h3 id="leftHead">Giriş</h3>
+            <small id="leftHint">Admin / Personel</small>
+          </div>
+          <div class="body">
+
+            <!-- HOME / LOGIN -->
+            <div id="viewHome">
+              <div class="grid2">
+                <div>
+                  <label>Mod</label>
+                  <select id="loginMode">
+                    <option value="admin">Admin</option>
+                    <option value="personnel">Personel</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Telefon</label>
+                  <input id="loginPhone" inputmode="numeric" placeholder="5xxxxxxxxx" />
+                </div>
+              </div>
+
+              <div style="height:10px"></div>
+
+              <div class="grid2">
+                <div>
+                  <label>PIN</label>
+                  <input id="loginPin" inputmode="numeric" placeholder="••••" />
+                  <div class="hint" id="pinHint">Personel için varsayılan: telefonun son 4 hanesi.</div>
+                </div>
+                <div style="display:flex; align-items:flex-end; gap:10px">
+                  <button id="btnLogin" class="btn primary" style="width:100%">Giriş Yap</button>
+                </div>
+              </div>
+
+              <div class="kpi" style="margin-top:14px">
+                <div class="box"><b id="kpiUsers">—</b><span>Kayıtlı kullanıcı</span></div>
+                <div class="box"><b id="kpiTerminals">—</b><span>Terminal</span></div>
+                <div class="box"><b id="kpiToday">—</b><span>Bugün kayıt</span></div>
+              </div>
+
+              <div class="alert" id="loginError"></div>
+              <div class="okline" id="loginOk"></div>
+            </div>
+
+            <!-- PERSONNEL -->
+            <div id="viewPersonnel" class="hidden">
+              <div class="row">
+                <div class="badge" id="meBadge">—</div>
+                <div class="right split" style="justify-content:flex-end">
+                  <button class="btn ok" id="btnStart">Başlandı</button>
+                  <button class="btn danger" id="btnEnd">Bitti</button>
+                </div>
+              </div>
+
+              <div style="height:12px"></div>
+
+              <div class="split">
+                <div>
+                  <label>Terminal</label>
+                  <select id="personnelTerminal"></select>
+                  <div class="hint">Konum izni yoksa mesai başlatılamaz.</div>
+                </div>
+                <div>
+                  <label>Durum</label>
+                  <div id="shiftStatus" class="badge warn">—</div>
+                  <div class="hint" id="shiftHint">—</div>
+                </div>
+              </div>
+
+              <div style="height:12px"></div>
+
+              <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
+                <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
+                  <h3>Mesai çizelgesi (son 14 gün)</h3>
+                  <small>9 saati geçen mesai: 1 saat yemek düşülür</small>
+                </div>
+                <div class="body" style="max-height:360px">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tarih</th>
+                        <th>Terminal</th>
+                        <th>Başladı</th>
+                        <th>Bitti</th>
+                        <th>Net Süre</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tblMyShifts"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="alert" id="personnelError"></div>
+              <div class="okline" id="personnelOk"></div>
+            </div>
+
+            <!-- ADMIN -->
+            <div id="viewAdmin" class="hidden">
+              <div class="row">
+                <div class="badge" id="adminBadge">—</div>
+                <button class="btn primary right" id="btnRefreshAdmin">Yenile</button>
+              </div>
+
+              <div style="height:12px"></div>
+
+              <div class="split">
+                <div>
+                  <label>Personel seç</label>
+                  <select id="adminPickUser"></select>
+                </div>
+                <div>
+                  <label>Tarih aralığı</label>
+                  <div class="grid2">
+                    <input id="adminFrom" type="date" />
+                    <input id="adminTo" type="date" />
+                  </div>
+                </div>
+              </div>
+
+              <div style="height:12px"></div>
+
+              <div class="row">
+                <button class="btn" id="btnAdminLoad">Listele</button>
+                <button class="btn" id="btnAdminManual">Manuel düzeltme</button>
+                <button class="btn" id="btnAdminUsers">Kullanıcı yönetimi</button>
+                <button class="btn" id="btnAdminTerminals">Terminal ekle</button>
+              </div>
+
+              <div class="alert" id="adminError"></div>
+              <div class="okline" id="adminOk"></div>
+
+              <div style="height:12px"></div>
+
+              <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
+                <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
+                  <h3>Seçili personel kayıtları</h3>
+                  <small id="adminSummary">—</small>
+                </div>
+                <div class="body" style="max-height:420px">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tarih</th>
+                        <th>Terminal</th>
+                        <th>Başlandı</th>
+                        <th>Bitti</th>
+                        <th>Net</th>
+                        <th>Konum</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tblAdminShifts"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- SETUP -->
+            <div id="viewSetup" class="hidden">
+              <div class="row">
+                <div class="grow">
+                  <div class="small">Bu ekran sadece anahtarları girip test etmek için. Anahtarlar cihazda saklanır.</div>
+                </div>
+                <button id="btnClearLocal" class="btn danger">Bu cihazı sıfırla</button>
+              </div>
+
+              <div style="height:12px"></div>
+
+              <div class="grid2">
+                <div>
+                  <label>Supabase Project URL</label>
+                  <input id="sbUrl" placeholder="https://xxxx.supabase.co" />
+                </div>
+                <div>
+                  <label>Supabase Public (anon) Key</label>
+                  <input id="sbAnon" placeholder="eyJhbGci..." />
+                </div>
+              </div>
+
+              <div style="height:12px"></div>
+
+              <div class="row">
+                <button id="btnSaveSetup" class="btn primary">Kaydet</button>
+                <button id="btnTestSetup" class="btn">Bağlantıyı test et</button>
+              </div>
+
+              <div class="alert" id="setupError"></div>
+              <div class="okline" id="setupOk"></div>
+
+              <div style="height:14px"></div>
+
+              <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
+                <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
+                  <h3>Supabase SQL (Tablolar)</h3>
+                  <small>Supabase → SQL Editor içine yapıştırıp çalıştır</small>
+                </div>
+                <div class="body">
+                  <pre id="sqlBlock" style="white-space:pre-wrap; font-family:var(--mono); font-size:12px; margin:0; color:rgba(233,240,255,.92)"></pre>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="card" id="rightCard">
+          <div class="head">
+            <h3 id="rightHead">Durum</h3>
+            <small>Konum ve servis</small>
+          </div>
+          <div class="body">
+            <div class="badge warn" id="geoBadge">Konum Sonucu: Henüz istenmedi.</div>
+            <div style="height:10px"></div>
+            <button id="btnGeoTest" class="btn ok" style="width:100%">Konumu test et</button>
+            <div class="hint" style="margin-top:10px">
+              Konum, <b>HTTPS</b> üzerinde çalışır (GitHub Pages uygundur). VPN / tarayıcı izinleri konumu etkileyebilir.
+            </div>
+
+            <div style="height:14px"></div>
+            <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
+              <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
+                <h3>Canlı log</h3><small>Son 30 satır</small>
+              </div>
+              <div class="body" style="max-height:360px">
+                <pre id="log" style="white-space:pre-wrap; font-family:var(--mono); font-size:12px; margin:0; color:rgba(233,240,255,.88)"></pre>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./app.js"></script>
+  <script>
+    // PWA install button
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('btnInstall').classList.remove('hidden');
+    });
+    document.getElementById('btnInstall').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('btnInstall').classList.add('hidden');
+    });
+
+    // SW register
+    (async () => {
+      const pwaDot = document.getElementById('pwaDot');
+      const pwaText = document.getElementById('pwaText');
+      try{
+        if('serviceWorker' in navigator){
+          const reg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+          pwaDot.className = 'badge ok';
+          pwaDot.textContent = '•';
+          pwaText.textContent = 'Service Worker aktif';
+          window.__swreg = reg;
+        } else {
+          pwaDot.className = 'badge warn';
+          pwaText.textContent = 'Service Worker desteklenmiyor';
+        }
+      }catch(err){
+        pwaDot.className = 'badge bad';
+        pwaText.textContent = 'Service Worker hata';
+        console.warn(err);
+      }
+    })();
+
+    document.getElementById('btnHardRefresh').addEventListener('click', async () => {
+      try{
+        if (window.__swreg) await window.__swreg.unregister();
+        if (window.caches) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+      }catch(_){}
+      location.reload(true);
+    });
+  </script>
+</body>
+</html>
