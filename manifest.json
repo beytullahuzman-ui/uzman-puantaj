@@ -1,11 +1,10 @@
 {
-  "name": "UZMAN Puantaj",
-  "short_name": "UZMAN",
-  "start_url": "./",
-  "scope": "./",
+  "name": "Uzman Puantaj",
+  "short_name": "Uzman",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b1220",
-  "theme_color": "#2563eb",
+  "background_color": "#0a63ff",
+  "theme_color": "#0a63ff",
   "icons": [
     {
       "src": "./icon-192.png",
