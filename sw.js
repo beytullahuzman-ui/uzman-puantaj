@@ -1,39 +1,57 @@
-/* UZMAN Puantaj - simple cache for PWA */
-const CACHE = "uzman-puantaj-cache-v1";
-const ASSETS = [
+/* UZMAN Puantaj - Service Worker */
+const VERSION = "v1.0.0";
+const CACHE_NAME = `uzman-puantaj-${VERSION}`;
+const CORE = [
   "./",
   "./index.html",
+  "./app.js",
   "./manifest.json",
-  "./sw.js",
   "./icon-192.png",
   "./icon-512.png"
 ];
 
-self.addEventListener("install", (event)=>{
-  event.waitUntil(
-    caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())
-  );
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(CORE);
+    self.skipWaiting();
+  })());
 });
 
-self.addEventListener("activate", (event)=>{
-  event.waitUntil(
-    caches.keys().then(keys=>Promise.all(keys.map(k=>k!==CACHE?caches.delete(k):null)))
-      .then(()=>self.clients.claim())
-  );
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => (k !== CACHE_NAME) ? caches.delete(k) : Promise.resolve()));
+    self.clients.claim();
+  })());
 });
 
-self.addEventListener("fetch", (event)=>{
+self.addEventListener("fetch", (event) => {
   const req = event.request;
-  if(req.method !== "GET") return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
 
-  event.respondWith(
-    caches.match(req).then((cached)=>{
-      if(cached) return cached;
-      return fetch(req).then((resp)=>{
-        const copy = resp.clone();
-        caches.open(CACHE).then(c=>c.put(req, copy)).catch(()=>{});
-        return resp;
-      }).catch(()=> cached || new Response("Offline", {status:503, statusText:"Offline"}));
-    })
-  );
+  if (req.headers.get("accept")?.includes("text/html")) {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(req);
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(req, fresh.clone());
+        return fresh;
+      } catch (e) {
+        const cache = await caches.open(CACHE_NAME);
+        return (await cache.match(req)) || (await cache.match("./index.html"));
+      }
+    })());
+    return;
+  }
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(req);
+    if (cached) return cached;
+    const fresh = await fetch(req);
+    cache.put(req, fresh.clone());
+    return fresh;
+  })());
 });

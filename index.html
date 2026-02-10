@@ -2,1215 +2,586 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#2563eb" />
+  <title>UZMAN Puantaj</title>
+
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" href="./icon-192.png" />
-  <title>UZMAN Puantaj</title>
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+
   <style>
     :root{
-      --bg:#0b1220; --panel:#0f1a2f; --panel2:#111f3a; --card:#0e1a33;
-      --text:#e8eefc; --muted:#9bb0d3; --line:rgba(255,255,255,.08);
-      --blue:#2563eb; --blue2:#1d4ed8; --green:#22c55e; --amber:#f59e0b; --red:#ef4444;
-      --shadow: 0 12px 35px rgba(0,0,0,.35);
+      --bg:#0b1220; --bg2:#0e1729; --card:#101a2f; --card2:#0f1a33;
+      --muted:#93a4c7; --text:#e8efff; --brand:#2563eb; --brand2:#3b82f6;
+      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --line:rgba(255,255,255,.08);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
       --r: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1000px 600px at 20% -10%, rgba(37,99,235,.25), transparent 60%),
-                  radial-gradient(900px 600px at 90% 10%, rgba(34,197,94,.18), transparent 55%),
+      margin:0; font: 14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(37,99,235,.25), transparent 60%),
+                  radial-gradient(800px 600px at 100% 0%, rgba(34,197,94,.12), transparent 55%),
                   var(--bg);
       color:var(--text);
     }
     a{color:inherit}
-    .app{min-height:100%; display:flex; flex-direction:column}
-    header{
-      position:sticky; top:0; z-index:20;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.72));
-      border-bottom:1px solid var(--line);
+    .app{min-height:100vh;display:grid;grid-template-columns:280px 1fr}
+    .sidebar{
+      position:sticky; top:0; height:100vh; padding:18px 14px;
+      background: linear-gradient(180deg, rgba(16,26,47,.92), rgba(9,13,24,.92));
+      border-right: 1px solid var(--line); backdrop-filter: blur(10px);
     }
-    .bar{
-      max-width:1200px; margin:0 auto; padding:14px 16px;
-      display:flex; align-items:center; gap:12px; justify-content:space-between;
-    }
-    .brand{display:flex; align-items:center; gap:10px}
+    .brand{display:flex; align-items:center; gap:10px; padding:10px 10px 16px}
     .logo{
-      width:38px; height:38px; border-radius:12px;
-      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(29,78,216,1));
-      display:grid; place-items:center; box-shadow: var(--shadow);
-      position:relative; overflow:hidden;
+      width:38px;height:38px;border-radius:12px;
+      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(59,130,246,.8));
+      box-shadow: 0 12px 30px rgba(37,99,235,.35);
+      display:grid; place-items:center; font-weight:900;
     }
-    .logo:before{
-      content:""; position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 55%);
-      transform: rotate(25deg);
+    .brand h1{font-size:16px;margin:0}
+    .brand small{display:block;color:var(--muted); margin-top:2px}
+    .nav{display:flex; flex-direction:column; gap:6px; padding:10px 6px}
+    .nav button{
+      all:unset; display:flex; align-items:center; gap:10px;
+      padding:10px 10px; border-radius:14px; color:rgba(232,239,255,.9);
+      cursor:pointer; transition:.15s ease; border:1px solid transparent;
     }
-    .logo span{font-weight:800; letter-spacing:.5px; position:relative}
-    .brand h1{font-size:15px; margin:0; letter-spacing:.2px}
-    .brand small{display:block; margin-top:2px; color:var(--muted); font-size:12px}
-    .topActions{display:flex; gap:10px; align-items:center}
+    .nav button:hover{background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.06)}
+    .nav button.active{background: rgba(37,99,235,.18); border-color: rgba(37,99,235,.35)}
+    .nav .dot{width:10px;height:10px;border-radius:50%;background: rgba(255,255,255,.18)}
+    .nav button.active .dot{background: var(--brand2)}
+    .side-footer{
+      position:absolute; left:14px; right:14px; bottom:14px;
+      padding:10px 10px; border:1px solid var(--line);
+      border-radius: 16px; background: rgba(255,255,255,.03);
+    }
     .pill{
-      padding:8px 10px; border:1px solid var(--line); background: rgba(255,255,255,.04);
-      border-radius:999px; color:var(--muted); font-size:12px; display:flex; gap:8px; align-items:center;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line); background: rgba(255,255,255,.03);
+      color: var(--muted); font-size:12px;
     }
-    .pill b{color:var(--text); font-weight:700}
-    main{flex:1}
-    .wrap{max-width:1200px; margin:0 auto; padding:18px 16px 28px}
-    .grid{display:grid; gap:14px}
-    @media (min-width: 980px){
-      .grid.admin{grid-template-columns: 380px 1fr}
-      .grid.person{grid-template-columns: 420px 1fr}
+    .content{padding:18px 18px 26px}
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding:12px 14px; background: rgba(255,255,255,.03);
+      border:1px solid var(--line); border-radius: var(--r);
+      box-shadow: var(--shadow); backdrop-filter: blur(10px);
     }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card .hd{
-      padding:14px 14px 10px;
-      border-bottom:1px solid var(--line);
-      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
-    }
-    .card .hd h2{margin:0; font-size:14px}
-    .card .hd p{margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.35}
-    .card .bd{padding:14px}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .col{flex:1 1 170px}
-    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
-    input, select, textarea{
-      width:100%;
-      padding:11px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background: rgba(9,14,25,.55);
-      color:var(--text);
-      outline:none;
-    }
-    input:focus, select:focus, textarea:focus{border-color: rgba(37,99,235,.6); box-shadow: 0 0 0 4px rgba(37,99,235,.12)}
-    textarea{min-height:90px; resize:vertical}
+    .topbar .title{display:flex; flex-direction:column; gap:2px}
+    .topbar .title strong{font-size:16px}
+    .topbar .title span{color:var(--muted); font-size:12px}
+    .actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
     .btn{
-      padding:11px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      cursor:pointer;
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      font-weight:700;
-      transition: .15s transform ease, .15s background ease, .15s border-color ease;
+      border:1px solid var(--line); background: rgba(255,255,255,.04);
+      color: var(--text); padding:10px 12px; border-radius: 14px;
+      cursor:pointer; transition:.15s ease; display:inline-flex; align-items:center; gap:8px;
       user-select:none;
     }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
-    .btn:active{transform: translateY(0)}
-    .btn.primary{background: linear-gradient(135deg, var(--blue), var(--blue2)); border-color: rgba(37,99,235,.6)}
-    .btn.primary:hover{background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(29,78,216,.95))}
-    .btn.green{background: linear-gradient(135deg, rgba(34,197,94,.95), rgba(16,185,129,.95)); border-color: rgba(34,197,94,.55)}
-    .btn.red{background: linear-gradient(135deg, rgba(239,68,68,.95), rgba(220,38,38,.95)); border-color: rgba(239,68,68,.55)}
-    .btn.ghost{background: transparent}
-    .btn.small{padding:9px 10px; border-radius:12px; font-size:12px}
-    .btn:disabled{opacity:.55; cursor:not-allowed; transform:none}
-    .seg{
-      display:flex; background: rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      border-radius:999px; padding:4px;
-      gap:4px;
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.06)}
+    .btn.primary{background: rgba(37,99,235,.22); border-color: rgba(37,99,235,.45)}
+    .btn.primary:hover{background: rgba(37,99,235,.28)}
+    .btn.ok{background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.35)}
+    .btn.bad{background: rgba(239,68,68,.16); border-color: rgba(239,68,68,.35)}
+    .btn:disabled{opacity:.45; cursor:not-allowed; transform:none}
+    .grid{display:grid; gap:14px; grid-template-columns: 1.1fr .9fr; margin-top:14px}
+    .card{
+      background: linear-gradient(180deg, rgba(16,26,47,.85), rgba(10,14,26,.85));
+      border:1px solid var(--line); border-radius: var(--r);
+      box-shadow: var(--shadow); overflow:hidden;
     }
-    .seg button{
-      flex:1; border-radius:999px; border:0;
-      background: transparent; color:var(--muted);
-      padding:10px 10px; cursor:pointer; font-weight:800;
-    }
-    .seg button.on{background: rgba(37,99,235,.22); color:var(--text)}
-    .kpi{
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .kpi .box{
-      flex:1 1 160px;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid var(--line);
+    .card .hd{
+      padding:12px 14px; border-bottom:1px solid var(--line);
+      display:flex; justify-content:space-between; align-items:center;
       background: rgba(255,255,255,.03);
     }
-    .kpi .box .t{font-size:12px; color:var(--muted)}
-    .kpi .box .v{margin-top:6px; font-size:18px; font-weight:900}
-    .kpi .box .s{margin-top:4px; font-size:12px; color:var(--muted)}
-    table{width:100%; border-collapse:collapse}
-    th,td{padding:10px 10px; border-bottom:1px solid var(--line); font-size:12px; vertical-align:top}
-    th{color:var(--muted); font-weight:800; text-align:left; background: rgba(255,255,255,.02)}
+    .card .hd strong{font-size:13px}
+    .card .bd{padding:14px}
+    .kpis{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px}
+    .kpi{padding:12px 12px; border:1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.03)}
+    .kpi .v{font-size:18px; font-weight:800}
+    .kpi .l{font-size:12px; color:var(--muted)}
+    .table{width:100%; border-collapse: collapse; overflow:auto}
+    .table th, .table td{
+      text-align:left; padding:10px 10px; border-bottom:1px solid rgba(255,255,255,.06);
+      vertical-align: top; white-space: nowrap;
+    }
+    .table th{
+      font-size:12px; color: var(--muted); font-weight:700;
+      position:sticky; top:0; background: rgba(16,26,47,.9); z-index:1;
+    }
     .tag{
-      display:inline-flex; align-items:center; gap:6px;
-      padding:6px 10px; border-radius:999px; font-size:11px;
-      border:1px solid var(--line); background: rgba(255,255,255,.03); color:var(--muted);
-      white-space:nowrap;
+      display:inline-flex; align-items:center; gap:6px; padding:4px 8px;
+      border-radius:999px; border:1px solid var(--line);
+      background: rgba(255,255,255,.03); font-size:12px; color: var(--muted);
     }
-    .tag.green{border-color: rgba(34,197,94,.35); color: rgba(167,243,208,.95); background: rgba(34,197,94,.08)}
-    .tag.red{border-color: rgba(239,68,68,.35); color: rgba(254,202,202,.95); background: rgba(239,68,68,.08)}
-    .tag.blue{border-color: rgba(37,99,235,.35); color: rgba(191,219,254,.95); background: rgba(37,99,235,.10)}
-    .list{
-      display:flex; flex-direction:column; gap:10px;
+    .tag.ok{border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.12); color: rgba(180,255,210,.9)}
+    .tag.bad{border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); color: rgba(255,200,200,.95)}
+    .tag.warn{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); color: rgba(255,230,180,.95)}
+    .form{display:grid; gap:10px}
+    label{font-size:12px; color: var(--muted)}
+    input, select, textarea{
+      width:100%; padding:10px 12px; border-radius: 14px;
+      border:1px solid var(--line); background: rgba(255,255,255,.03);
+      color: var(--text); outline:none;
     }
-    .item{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      border-radius:16px;
-      padding:12px;
-      display:flex; justify-content:space-between; gap:10px;
-      cursor:pointer;
-      transition: .12s background ease, .12s transform ease;
+    textarea{min-height:96px; resize:vertical}
+    .two{display:grid; grid-template-columns: 1fr 1fr; gap:10px}
+    .hint{color:var(--muted); font-size:12px}
+    .sep{height:1px; background: var(--line); margin:12px 0}
+    .notice{
+      padding:10px 12px; border-radius: 14px;
+      border:1px solid rgba(37,99,235,.35);
+      background: rgba(37,99,235,.10);
+      color: rgba(232,239,255,.92); font-size:12px;
     }
-    .item:hover{background: rgba(255,255,255,.05); transform: translateY(-1px)}
-    .item .name{font-weight:900}
-    .item .sub{color:var(--muted); font-size:12px; margin-top:3px}
-    .ico{font-family: "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", sans-serif}
-    .toast{
-      position: fixed; left:50%; bottom: 18px; transform: translateX(-50%);
-      background: rgba(15,26,47,.92);
-      border:1px solid var(--line);
-      border-radius: 999px;
-      padding: 10px 12px;
-      display:none; align-items:center; gap:10px;
-      box-shadow: var(--shadow);
-      z-index: 99;
-      max-width: 92vw;
+    .error{
+      padding:10px 12px; border-radius: 14px;
+      border:1px solid rgba(239,68,68,.35);
+      background: rgba(239,68,68,.10);
+      color: rgba(255,220,220,.96); font-size:12px;
     }
-    .toast.show{display:flex}
-    .toast .msg{font-size:12px; color:var(--text)}
-    .toast .x{border:0; background: transparent; color:var(--muted); cursor:pointer; font-size:16px; line-height:1}
-    .muted{color:var(--muted)}
-    .hr{height:1px; background: var(--line); margin:12px 0}
-    .right{
-      display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;
+    .maplink{color: rgba(180,210,255,.95); text-decoration: underline; cursor:pointer}
+    .modal{
+      position:fixed; inset:0; background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center; padding:16px; z-index:50;
     }
-    .mono{font-family: var(--mono)}
-    .foot{
-      text-align:center; color:var(--muted); font-size:12px; padding:18px 10px;
+    .modal.on{display:flex}
+    .modal .panel{
+      width:min(980px, 100%); max-height: 88vh; overflow:auto;
+      border-radius: 20px; border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(16,26,47,.95), rgba(10,14,26,.95));
+      box-shadow: 0 24px 90px rgba(0,0,0,.55);
     }
-    .dangerBox{
-      padding:12px; border-radius:16px;
-      border:1px dashed rgba(239,68,68,.45);
-      background: rgba(239,68,68,.06);
-      color: rgba(254,202,202,.95);
-      font-size:12px;
-      line-height:1.35;
+    .modal .panel .hd{position:sticky; top:0}
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size:12px; white-space: pre; overflow:auto;
+      padding:12px; border-radius: 14px; border:1px solid var(--line);
+      background: rgba(0,0,0,.25)
+    }
+    @media (max-width: 980px){
+      .app{grid-template-columns: 1fr}
+      .sidebar{position:relative; height:auto}
+      .grid{grid-template-columns: 1fr}
+      .kpis{grid-template-columns: 1fr}
     }
   </style>
 </head>
 <body>
-<div class="app" id="app">
-  <header>
-    <div class="bar">
+  <div class="app">
+    <aside class="sidebar">
       <div class="brand">
-        <div class="logo"><span>U</span></div>
+        <div class="logo">U</div>
         <div>
           <h1>UZMAN Puantaj</h1>
-          <small id="subtitle">Puantaj + konum doğrulama</small>
+          <small>Canlı sürüm (Supabase)</small>
         </div>
       </div>
-      <div class="topActions">
-        <div class="pill" id="sessionPill" style="display:none;">
-          <span class="ico">👤</span>
-          <span><b id="who"></b> · <span id="role"></span></span>
-        </div>
-        <button class="btn small ghost" id="logoutBtn" style="display:none;">Çıkış</button>
+
+      <div class="nav" id="nav">
+        <button data-view="home" class="active"><span class="dot"></span> Ana Sayfa</button>
+        <button data-view="personel"><span class="dot"></span> Personel</button>
+        <button data-view="admin"><span class="dot"></span> Admin Paneli</button>
+        <button data-view="ayar"><span class="dot"></span> Kurulum & Ayarlar</button>
       </div>
-    </div>
-  </header>
 
-  <main>
-    <div class="wrap" id="viewLogin">
-      <div class="card">
-        <div class="hd">
-          <div>
-            <h2>Giriş</h2>
-            <p>Telefon + PIN ile giriş. Konum izni verilmeyen cihazlarda “Başlandı” kaydı oluşturulmaz.</p>
-          </div>
-          <span class="tag blue">PWA</span>
-        </div>
-        <div class="bd">
-          <div class="seg" style="max-width:420px;">
-            <button id="tabPersonel" class="on">Personel</button>
-            <button id="tabAdmin">Admin</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row">
-            <div class="col">
-              <label>Telefon (TR)</label>
-              <input id="loginPhone" inputmode="tel" placeholder="+905xxxxxxxxx" />
-            </div>
-            <div class="col">
-              <label>PIN</label>
-              <input id="loginPin" inputmode="numeric" maxlength="8" placeholder="****" />
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px;">
-            <button class="btn primary" id="loginBtn">Giriş yap</button>
-            <button class="btn" id="installBtn" style="display:none;">Ana ekrana ekle</button>
-          </div>
-
-          <div class="hr"></div>
-          <div class="dangerBox">
-            <b>Not:</b> Bu sürüm “demo + yerel kayıt” mantığıyla çalışır (tarayıcı depolaması). Gerçek üretimde sunucu + veritabanı gerekir.
-          </div>
+      <div class="side-footer">
+        <div class="pill" id="pillStatus">● Bağlantı: <b id="connText">Kapalı</b></div>
+        <div class="hint" style="margin-top:8px">
+          Konum izni yoksa “Başlandı / Bitti” çalışmaz.
         </div>
       </div>
-    </div>
+    </aside>
 
-    <div class="wrap" id="viewPersonel" style="display:none;">
-      <div class="grid person">
+    <main class="content">
+      <div class="topbar">
+        <div class="title">
+          <strong id="topTitle">Ana Sayfa</strong>
+          <span id="topSub">Puantaj kayıtları + konum doğrulama</span>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnInstall" style="display:none">➕ Ana ekrana ekle</button>
+          <button class="btn" id="btnLogout">Çıkış</button>
+        </div>
+      </div>
+
+      <div id="viewHome" class="grid">
         <div class="card">
-          <div class="hd">
-            <div>
-              <h2>Mesai</h2>
-              <p>2 buton: <b>Başlandı</b> ve <b>Bitti</b>. Her iki işlemde konum alınır. Konum izni yoksa işlem yapılamaz.</p>
-            </div>
-            <span class="tag" id="pStateTag">Hazır</span>
-          </div>
+          <div class="hd"><strong>Giriş</strong><span class="tag" id="whoTag">—</span></div>
           <div class="bd">
-            <div class="row">
-              <div class="col">
+            <div class="notice" id="setupNotice" style="display:none">
+              İlk kurulum gerekli: Supabase URL + Public Key giriniz.
+            </div>
+
+            <div class="two">
+              <div>
+                <label>Mod</label>
+                <select id="modeSel">
+                  <option value="personel">Personel</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div>
+                <label>Telefon</label>
+                <input id="phone" placeholder="+90..." inputmode="tel" />
+              </div>
+            </div>
+            <div class="two">
+              <div>
+                <label>PIN</label>
+                <input id="pin" placeholder="****" inputmode="numeric" type="password" />
+                <div class="hint">Personel için varsayılan: telefonun son 4 hanesi.</div>
+              </div>
+              <div style="display:flex; align-items:end; gap:10px">
+                <button class="btn primary" id="btnLogin" style="width:100%">Giriş Yap</button>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="kpis">
+              <div class="kpi">
+                <div class="v" id="kpiUsers">—</div>
+                <div class="l">Kayıtlı kullanıcı</div>
+              </div>
+              <div class="kpi">
+                <div class="v" id="kpiTerm">—</div>
+                <div class="l">Terminal</div>
+              </div>
+              <div class="kpi">
+                <div class="v" id="kpiShift">—</div>
+                <div class="l">Bugün kayıt</div>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+            <div id="homeErr" class="error" style="display:none"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><strong>Durum</strong><span class="tag" id="geoTag">Konum: —</span></div>
+          <div class="bd">
+            <div class="form">
+              <div>
+                <label>Konum Sonucu</label>
+                <div class="hint" id="geoText">Henüz istenmedi.</div>
+              </div>
+              <button class="btn ok" id="btnTestGeo">📍 Konumu test et</button>
+              <div class="hint">GitHub Pages üzerinden HTTPS olduğu için konum çalışır. (VPN / tarayıcı izinleri önemli)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewPersonel" class="grid" style="display:none">
+        <div class="card">
+          <div class="hd"><strong>Personel Paneli</strong><span class="tag" id="pUser">—</span></div>
+          <div class="bd">
+            <div class="two">
+              <div>
                 <label>Terminal</label>
                 <select id="pTerminal"></select>
+                <div class="hint">Başlama/Bitiş konumu kaydı terminale bağlanır.</div>
               </div>
-              <div class="col">
-                <label>Planlanan Sevk (opsiyonel)</label>
-                <input id="pPlan" placeholder="örn. 10:30 / Gemi / Araç" />
+              <div>
+                <label>Bugün</label>
+                <input id="pToday" disabled />
+              </div>
+            </div>
+            <div class="sep"></div>
+            <div class="two">
+              <button class="btn ok" id="btnStart">✅ Başlandı</button>
+              <button class="btn bad" id="btnEnd">⛔ Bitti</button>
+            </div>
+            <div class="hint" style="margin-top:8px" id="pHint"></div>
+            <div class="sep"></div>
+
+            <div class="card" style="border-radius:16px">
+              <div class="hd"><strong>Geriye dönük mesai çizelgesi</strong><span class="tag" id="pSum">—</span></div>
+              <div class="bd" style="padding:0">
+                <div style="max-height:380px; overflow:auto">
+                  <table class="table" id="pTable">
+                    <thead>
+                      <tr>
+                        <th>Tarih</th>
+                        <th>Başlandı</th>
+                        <th>Bitti</th>
+                        <th>Süre</th>
+                        <th>Mola</th>
+                        <th>Net</th>
+                        <th>Terminal</th>
+                        <th>Konum</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
-            <div class="row" style="margin-top:10px;">
-              <button class="btn green" id="btnStart">Başlandı</button>
-              <button class="btn red" id="btnEnd" disabled>Bitti</button>
-            </div>
-
-            <div class="hr"></div>
-            <div class="kpi">
-              <div class="box">
-                <div class="t">Bugün toplam</div>
-                <div class="v" id="kToday">0:00</div>
-                <div class="s muted">> 9 saatte 1 saat mola düşer</div>
-              </div>
-              <div class="box">
-                <div class="t">Son kayıt</div>
-                <div class="v" id="kLast">—</div>
-                <div class="s" id="kLastSub">—</div>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-            <div class="muted" style="font-size:12px; line-height:1.4;">
-              Konum doğrulama: <span class="mono" id="pLocState">Henüz istenmedi.</span>
-            </div>
+            <div class="sep"></div>
+            <div id="pErr" class="error" style="display:none"></div>
           </div>
         </div>
 
         <div class="card">
-          <div class="hd">
-            <div>
-              <h2>Günlük Mesai Çizelgesi</h2>
-              <p>Geriye dönük kayıtlar. Admin panelinde tarih aralığı + net süre (mola dahil) görülür.</p>
-            </div>
-            <span class="tag blue" id="pCountTag">0 kayıt</span>
-          </div>
+          <div class="hd"><strong>Konum Kayıt</strong><span class="tag" id="pGeo">—</span></div>
           <div class="bd">
-            <div style="overflow:auto; border-radius:14px; border:1px solid var(--line);">
-              <table>
+            <div class="hint">Konum izni verilmezse mesai başlatılamaz / bitirilemez.</div>
+            <div class="sep"></div>
+            <div class="form">
+              <div>
+                <label>Son ölçüm</label>
+                <div class="hint" id="pGeoText">—</div>
+              </div>
+              <button class="btn" id="btnRefreshP">↻ Yenile</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewAdmin" class="grid" style="display:none">
+        <div class="card">
+          <div class="hd"><strong>Admin Paneli</strong><span class="tag" id="aUser">—</span></div>
+          <div class="bd">
+            <div class="two">
+              <div>
+                <label>Personel seç</label>
+                <select id="aPerson"></select>
+              </div>
+              <div>
+                <label>Terminal seç</label>
+                <select id="aTermSel"></select>
+              </div>
+            </div>
+
+            <div class="two" style="margin-top:10px">
+              <div>
+                <label>Başlangıç tarihi</label>
+                <input type="date" id="aFrom" />
+              </div>
+              <div>
+                <label>Bitiş tarihi</label>
+                <input type="date" id="aTo" />
+              </div>
+            </div>
+
+            <div class="two" style="margin-top:10px">
+              <button class="btn primary" id="btnLoadRange">📊 Aralığı Getir</button>
+              <button class="btn" id="btnExportCsv">⬇ CSV indir</button>
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="kpis">
+              <div class="kpi">
+                <div class="v" id="aTotal">—</div>
+                <div class="l">Toplam (Net)</div>
+              </div>
+              <div class="kpi">
+                <div class="v" id="aLunch">—</div>
+                <div class="l">Toplam mola düşümü</div>
+              </div>
+              <div class="kpi">
+                <div class="v" id="aCount">—</div>
+                <div class="l">Kayıt adedi</div>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+
+            <div style="max-height:420px; overflow:auto; border-radius:16px">
+              <table class="table" id="aTable">
                 <thead>
                   <tr>
                     <th>Tarih</th>
-                    <th>Başlangıç</th>
-                    <th>Bitiş</th>
-                    <th>Brüt</th>
+                    <th>Personel</th>
+                    <th>Terminal</th>
+                    <th>Başlandı</th>
+                    <th>Bitti</th>
+                    <th>Süre</th>
                     <th>Mola</th>
                     <th>Net</th>
-                    <th>Terminal</th>
-                    <th>Konum</th>
+                    <th>Başlandı Konum</th>
+                    <th>Bitti Konum</th>
+                    <th>Düzenle</th>
                   </tr>
                 </thead>
-                <tbody id="pRows"></tbody>
+                <tbody></tbody>
               </table>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="wrap" id="viewAdmin" style="display:none;">
-      <div class="grid admin">
-        <div class="card">
-          <div class="hd">
-            <div>
-              <h2>Admin Panel</h2>
-              <p>Personel/terminal/admin yönetimi + tarih aralığında puantaj ve konum kanıtı.</p>
-            </div>
-            <span class="tag blue">Yönetim</span>
-          </div>
-          <div class="bd">
-            <div class="row">
-              <button class="btn primary" id="btnAddPersonel">Personel ekle</button>
-              <button class="btn" id="btnAddTerminal">Terminal ekle</button>
-              <button class="btn" id="btnAdmins">Adminler</button>
-              <button class="btn" id="btnAdminPin">PIN değiştir</button>
-            </div>
-
-            <div class="hr"></div>
-
-            <label>Personel listesi</label>
-            <div class="list" id="aList"></div>
-
-            <div class="hr"></div>
-            <div class="muted" style="font-size:12px;">
-              İpucu: Bir personeli seçince sağ tarafta tarih aralığına göre mesailer + konum linkleri görünür.
-            </div>
+            <div class="sep"></div>
+            <div id="aErr" class="error" style="display:none"></div>
           </div>
         </div>
 
         <div class="card">
-          <div class="hd">
-            <div>
-              <h2 id="aTitle">Seçim bekleniyor</h2>
-              <p id="aSub">Soldan bir personel seçin.</p>
-            </div>
-            <span class="tag" id="aStatusTag">—</span>
-          </div>
+          <div class="hd"><strong>Yönetim</strong><span class="tag">Yetkiler</span></div>
           <div class="bd">
-            <div id="aEmpty" class="muted">Henüz personel seçilmedi.</div>
+            <div class="notice">
+              Manuel mesai düzeltme ve kullanıcı/terminal yönetimi sadece admin içindir.
+            </div>
+            <div class="sep"></div>
 
-            <div id="aPanel" style="display:none;">
-              <div class="row">
-                <div class="col">
-                  <label>Başlangıç tarihi</label>
-                  <input id="rangeFrom" type="date" />
-                </div>
-                <div class="col">
-                  <label>Bitiş tarihi</label>
-                  <input id="rangeTo" type="date" />
-                </div>
-                <div class="col" style="min-width:190px;">
-                  <label>&nbsp;</label>
-                  <button class="btn primary" id="btnApplyRange">Göster</button>
-                </div>
-              </div>
-
-              <div class="hr"></div>
-
-              <div class="kpi">
-                <div class="box">
-                  <div class="t">Toplam net</div>
-                  <div class="v" id="aTotalNet">0:00</div>
-                  <div class="s">Seçili aralık</div>
-                </div>
-                <div class="box">
-                  <div class="t">Toplam mola</div>
-                  <div class="v" id="aTotalBreak">0:00</div>
-                  <div class="s">> 9 saatte 1 saat</div>
-                </div>
-                <div class="box">
-                  <div class="t">Kayıt adedi</div>
-                  <div class="v" id="aCount">0</div>
-                  <div class="s">Oturum</div>
-                </div>
-              </div>
-
-              <div class="hr"></div>
-
-              <div class="row" style="align-items:flex-end;">
-                <div class="col">
-                  <label>Manuel mesai ekle/düzelt</label>
-                  <div class="muted" style="font-size:12px; line-height:1.35;">
-                    Sadece admin. “Başlatmayı/Bitmeyi unutan” personel için.
+            <div class="card" style="border-radius:16px">
+              <div class="hd"><strong>Personel Ekle</strong><span class="tag">PIN = son 4</span></div>
+              <div class="bd">
+                <div class="two">
+                  <div>
+                    <label>Telefon</label>
+                    <input id="newPhone" placeholder="+905..." inputmode="tel" />
+                  </div>
+                  <div>
+                    <label>Ad Soyad</label>
+                    <input id="newName" placeholder="Örn: Mehmet Kara" />
                   </div>
                 </div>
-                <div class="col" style="max-width:220px;">
-                  <label>&nbsp;</label>
-                  <button class="btn" id="btnManual">Manuel giriş</button>
+                <div class="two" style="margin-top:10px">
+                  <div>
+                    <label>Rol</label>
+                    <select id="newRole">
+                      <option value="personel">Personel</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div style="display:flex; align-items:end">
+                    <button class="btn primary" id="btnAddUser" style="width:100%">➕ Ekle</button>
+                  </div>
                 </div>
-              </div>
-
-              <div class="hr"></div>
-
-              <div style="overflow:auto; border-radius:14px; border:1px solid var(--line);">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Tarih</th>
-                      <th>Başlangıç</th>
-                      <th>Bitiş</th>
-                      <th>Brüt</th>
-                      <th>Mola</th>
-                      <th>Net</th>
-                      <th>Terminal</th>
-                      <th>Konum kanıtı</th>
-                      <th>İşlem</th>
-                    </tr>
-                  </thead>
-                  <tbody id="aRows"></tbody>
-                </table>
+                <div class="hint" style="margin-top:8px">
+                  Admin eklenebilir/silinebilir. “Sahip” adminler silinemez (taç).
+                </div>
+                <div id="userMgmtErr" class="error" style="display:none; margin-top:10px"></div>
               </div>
             </div>
+
+            <div class="sep"></div>
+
+            <div class="card" style="border-radius:16px">
+              <div class="hd"><strong>Terminal Ekle</strong><span class="tag">admin</span></div>
+              <div class="bd">
+                <div class="two">
+                  <div>
+                    <label>Terminal Adı</label>
+                    <input id="newTermName" placeholder="Örn: 1001 Derince Terminali" />
+                  </div>
+                  <div style="display:flex; align-items:end">
+                    <button class="btn primary" id="btnAddTerm" style="width:100%">➕ Terminal Ekle</button>
+                  </div>
+                </div>
+                <div id="termMgmtErr" class="error" style="display:none; margin-top:10px"></div>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+            <button class="btn bad" id="btnDangerReset">⚠ Kurulumu Sıfırla (Sadece cihaz)</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewAyar" class="grid" style="display:none">
+        <div class="card">
+          <div class="hd"><strong>Kurulum & Ayarlar</strong><span class="tag">Supabase</span></div>
+          <div class="bd">
+            <div class="notice">
+              Bu ekran sadece anahtarları girip test etmek için. Anahtarlar cihazda saklanır.
+            </div>
+            <div class="sep"></div>
+
+            <div class="two">
+              <div>
+                <label>Supabase Project URL</label>
+                <input id="cfgUrl" placeholder="https://xxxx.supabase.co" />
+              </div>
+              <div>
+                <label>Supabase Public Key</label>
+                <input id="cfgKey" placeholder="sb-publishable-..." type="password" />
+              </div>
+            </div>
+
+            <div class="two" style="margin-top:10px">
+              <button class="btn primary" id="btnSaveCfg">💾 Kaydet</button>
+              <button class="btn" id="btnTestCfg">🔌 Bağlantıyı Test Et</button>
+            </div>
+
+            <div class="sep"></div>
+
+            <div class="card" style="border-radius:16px">
+              <div class="hd"><strong>Supabase SQL (Tablolar)</strong><span class="tag">1 defa</span></div>
+              <div class="bd">
+                <div class="hint">Supabase → SQL Editor içine yapıştırıp çalıştır.</div>
+                <div class="mono" id="sqlBox"></div>
+                <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap">
+                  <button class="btn" id="btnCopySql">📋 SQL Kopyala</button>
+                  <button class="btn" id="btnSeedOwners">👑 Sahip adminleri oluştur</button>
+                </div>
+                <div class="hint" style="margin-top:8px">
+                  Sahip adminler: senin 2 numaran (taç işareti). Bu adım PIN’i ekranda göstermez.
+                </div>
+                <div id="sqlErr" class="error" style="display:none; margin-top:10px"></div>
+              </div>
+            </div>
+
+            <div class="sep"></div>
+            <div class="hint" id="cfgHint">—</div>
           </div>
         </div>
 
+        <div class="card">
+          <div class="hd"><strong>PWA</strong><span class="tag">Kurulum</span></div>
+          <div class="bd">
+            <div class="hint">
+              Android (Chrome): Menü → “Ana ekrana ekle”.<br>
+              iOS (Safari): Paylaş → “Ana Ekrana Ekle”.<br><br>
+              Konum için HTTPS şart. GitHub Pages uygundur.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal" id="editModal">
+    <div class="panel card">
+      <div class="hd">
+        <strong>Mesai Düzenle</strong>
+        <div style="display:flex; gap:10px">
+          <button class="btn" id="btnCloseEdit">Kapat</button>
+          <button class="btn primary" id="btnSaveEdit">Kaydet</button>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="two">
+          <div>
+            <label>Başlangıç (ISO / yerel)</label>
+            <input id="eStart" placeholder="2026-02-08T08:00" />
+          </div>
+          <div>
+            <label>Bitiş (ISO / yerel)</label>
+            <input id="eEnd" placeholder="2026-02-08T18:00" />
+          </div>
+        </div>
+        <div class="two" style="margin-top:10px">
+          <div>
+            <label>Terminal</label>
+            <select id="eTerminal"></select>
+          </div>
+          <div>
+            <label>Açıklama</label>
+            <input id="eNote" placeholder="Manuel düzeltme notu..." />
+          </div>
+        </div>
+        <div class="hint" style="margin-top:10px">Not: 9 saati geçen çalışmada 1 saat mola otomatik düşülür (raporda gösterilir).</div>
+        <div id="eErr" class="error" style="display:none; margin-top:10px"></div>
       </div>
     </div>
+  </div>
 
-  </main>
-
-  <div class="foot">© UZMAN · Puantaj</div>
-</div>
-
-<div class="toast" id="toast">
-  <div class="msg" id="toastMsg">—</div>
-  <button class="x" id="toastX">×</button>
-</div>
-
-<script>
-/** =========================
- *  UZMAN Puantaj (Client-only demo)
- *  - LocalStorage "DB"
- *  - Location required on Start/End
- *  - Admin range view + break rule
- *  - Admin/personnel/admins/terminals management
- * ========================= */
-
-const $ = (id)=>document.getElementById(id);
-const fmt2 = (n)=>String(n).padStart(2,'0');
-
-function toast(msg, ms=3500){
-  const t=$('toast'); $('toastMsg').textContent=msg;
-  t.classList.add('show');
-  clearTimeout(toast._tm);
-  toast._tm=setTimeout(()=>t.classList.remove('show'), ms);
-}
-$('toastX').onclick=()=>$('toast').classList.remove('show');
-
-function nowISO(){ return new Date().toISOString(); }
-function todayKey(){
-  const d=new Date();
-  return d.getFullYear()+'-'+fmt2(d.getMonth()+1)+'-'+fmt2(d.getDate());
-}
-function isoToLocal(iso){
-  const d=new Date(iso);
-  return d.toLocaleString('tr-TR',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-}
-function isoToTime(iso){
-  const d=new Date(iso);
-  return d.toLocaleString('tr-TR',{hour:'2-digit',minute:'2-digit'});
-}
-function isoToDate(iso){
-  const d=new Date(iso);
-  return d.toLocaleDateString('tr-TR');
-}
-function minutesBetween(aIso,bIso){
-  const a=new Date(aIso).getTime();
-  const b=new Date(bIso).getTime();
-  if(!a||!b) return 0;
-  return Math.max(0, Math.round((b-a)/60000));
-}
-function minsToHM(mins){
-  const h=Math.floor(mins/60);
-  const m=mins%60;
-  return `${h}:${fmt2(m)}`;
-}
-function computeBreak(mins){
-  // Rule: if a single work session gross > 9h => subtract 60 mins
-  return mins>9*60 ? 60 : 0;
-}
-function googleMapsLink(lat,lng){
-  return `https://www.google.com/maps?q=${lat},${lng}`;
-}
-
-const STORAGE_KEY = "uzman_puantaj_db_v1";
-
-function loadDB(){
-  const raw=localStorage.getItem(STORAGE_KEY);
-  if(raw){
-    try { return JSON.parse(raw); } catch(e){}
-  }
-  return null;
-}
-function saveDB(db){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-}
-
-function normalizePhone(input){
-  // Accept +90..., 05..., 5...
-  let s = (input||"").trim();
-  if(!s) return "";
-  s = s.replace(/\s+/g,'');
-  if(s.startsWith("00")) s = "+"+s.slice(2);
-  if(s.startsWith("0")) s = "+90"+s.slice(1);
-  if(s.startsWith("5")) s = "+90"+s;
-  if(!s.startsWith("+")) s = "+"+s;
-  // Keep digits + plus
-  s = "+" + s.replace(/[^\d]/g,'');
-  return s;
-}
-
-function last4(phone){
-  const d = phone.replace(/[^\d]/g,'');
-  return d.slice(-4);
-}
-
-/** --- Seed DB --- */
-function seedDBIfNeeded(){
-  let db=loadDB();
-  if(db) return db;
-
-  const owner1 = "+905368373204"; // ends 3204
-  const owner2 = "+905432234916"; // ends 4916
-
-  db = {
-    version: 1,
-    terminals: [
-      { id: "t1", name: "1001Derince Terminali" },
-      { id: "t2", name: "1003Marmara MDH" },
-      { id: "t3", name: "1005Samsun Terminali" },
-      { id: "t4", name: "1006Trabzon Terminali" },
-      { id: "t5", name: "1014İskenderun Terminali" }
-    ],
-    users: [
-      // Owners (admin)
-      { id: "u_owner1", role:"admin", phone: owner1, name:"Beytullah Uzman", pin:"4916", owner:true, createdAt: nowISO() },
-      { id: "u_owner2", role:"admin", phone: owner2, name:"Beytullah Uzman", pin:"3204", owner:true, createdAt: nowISO() },
-
-      // Sample personel
-      { id: "u_p1", role:"personel", phone: "+905000000001", name:"Örnek Personel", pin:"0001", owner:false, createdAt: nowISO(), terminalId:"t1" }
-    ],
-    shifts: [
-      // Each shift:
-      // {id, userId, terminalId, plan, startAt, startLoc{lat,lng,acc}, endAt, endLoc{...}, manual, edited, editedAt, note}
-    ]
-  };
-  saveDB(db);
-  return db;
-}
-
-/** --- Session --- */
-const SESSION_KEY = "uzman_puantaj_session";
-function getSession(){
-  const raw=localStorage.getItem(SESSION_KEY);
-  if(!raw) return null;
-  try { return JSON.parse(raw); } catch(e){ return null; }
-}
-function setSession(sess){
-  localStorage.setItem(SESSION_KEY, JSON.stringify(sess));
-}
-function clearSession(){ localStorage.removeItem(SESSION_KEY); }
-
-let db = seedDBIfNeeded();
-let session = getSession();
-
-let loginMode = "personel"; // or admin
-$('tabPersonel').onclick=()=>{loginMode="personel"; $('tabPersonel').classList.add('on'); $('tabAdmin').classList.remove('on');};
-$('tabAdmin').onclick=()=>{loginMode="admin"; $('tabAdmin').classList.add('on'); $('tabPersonel').classList.remove('on');};
-
-$('logoutBtn').onclick=()=>{
-  clearSession(); session=null;
-  showView('login');
-  toast("Çıkış yapıldı.");
-};
-
-/** --- PWA install prompt --- */
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt', (e)=>{
-  e.preventDefault();
-  deferredPrompt=e;
-  $('installBtn').style.display = "inline-flex";
-});
-$('installBtn').onclick=async()=>{
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  $('installBtn').style.display="none";
-};
-
-async function ensureGeo(){
-  if(!navigator.geolocation){
-    toast("Bu cihaz konumu desteklemiyor.");
-    return null;
-  }
-  return new Promise((resolve)=>{
-    navigator.geolocation.getCurrentPosition(
-      (pos)=>{
-        resolve({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          acc: Math.round(pos.coords.accuracy||0),
-          at: nowISO()
-        });
-      },
-      (err)=>{
-        resolve({ error: true, code: err.code, message: err.message });
-      },
-      { enableHighAccuracy:true, timeout: 12000, maximumAge: 0 }
-    );
-  });
-}
-
-function showView(which){
-  $('viewLogin').style.display = (which==='login') ? "" : "none";
-  $('viewPersonel').style.display = (which==='personel') ? "" : "none";
-  $('viewAdmin').style.display = (which==='admin') ? "" : "none";
-
-  const pill = $('sessionPill');
-  if(which==='login'){
-    pill.style.display="none";
-    $('logoutBtn').style.display="none";
-    $('subtitle').textContent="Puantaj + konum doğrulama";
-  }else{
-    pill.style.display="";
-    $('logoutBtn').style.display="";
-    $('who').textContent = session?.name || "";
-    $('role').textContent = session?.role==="admin" ? "Admin" : "Personel";
-    $('subtitle').textContent = session?.role==="admin" ? "Yönetim ekranı" : "Personel ekranı";
-  }
-}
-
-function findUserByPhoneAndRole(phone, role){
-  phone=normalizePhone(phone);
-  return db.users.find(u=>u.phone===phone && u.role===role) || null;
-}
-
-function login(){
-  const phone = normalizePhone($('loginPhone').value);
-  const pin = ($('loginPin').value||"").trim();
-
-  if(!phone || !pin){
-    toast("Telefon ve PIN girin.");
-    return;
-  }
-
-  const u = findUserByPhoneAndRole(phone, loginMode);
-  if(!u){
-    toast("Kullanıcı bulunamadı.");
-    return;
-  }
-  if(u.pin !== pin){
-    toast("PIN hatalı.");
-    return;
-  }
-
-  session = { userId: u.id, role: u.role, name: u.name, phone: u.phone, owner: !!u.owner };
-  setSession(session);
-
-  $('loginPhone').value=""; $('loginPin').value="";
-  if(session.role==="admin"){ initAdmin(); showView('admin'); }
-  else { initPersonel(); showView('personel'); }
-  toast("Giriş başarılı.");
-}
-
-$('loginBtn').onclick=login;
-$('loginPin').addEventListener('keydown',(e)=>{ if(e.key==="Enter") login(); });
-
-/** =========================
- *  PERSONEL
- * ========================= */
-function activeShiftForUser(userId){
-  // open shift: has startAt but no endAt
-  return db.shifts.find(s=>s.userId===userId && s.startAt && !s.endAt) || null;
-}
-
-function initPersonel(){
-  // terminals select
-  const me = db.users.find(u=>u.id===session.userId);
-  $('pTerminal').innerHTML = db.terminals.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
-  if(me?.terminalId) $('pTerminal').value = me.terminalId;
-
-  // state
-  const open = activeShiftForUser(session.userId);
-  if(open){
-    $('btnStart').disabled=true;
-    $('btnEnd').disabled=false;
-    $('pStateTag').textContent="Mesai açık";
-    $('pStateTag').className="tag green";
-  }else{
-    $('btnStart').disabled=false;
-    $('btnEnd').disabled=true;
-    $('pStateTag').textContent="Hazır";
-    $('pStateTag').className="tag";
-  }
-  renderPersonelTable();
-  refreshPersonelKpis();
-}
-
-async function onStart(){
-  const termId = $('pTerminal').value;
-  const plan = ($('pPlan').value||"").trim();
-
-  const loc = await ensureGeo();
-  if(!loc || loc.error){
-    $('pLocState').textContent = "Konum izni verilmedi / alınamadı.";
-    toast("Konum izni olmadan mesai başlatılamaz.");
-    return;
-  }
-
-  $('pLocState').textContent = `OK · ${loc.lat.toFixed(5)}, ${loc.lng.toFixed(5)} (±${loc.acc}m)`;
-
-  const id = "s_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
-  db.shifts.unshift({
-    id,
-    userId: session.userId,
-    terminalId: termId,
-    plan,
-    startAt: nowISO(),
-    startLoc: loc,
-    endAt: null,
-    endLoc: null,
-    manual: false,
-    edited: false,
-    editedAt: null,
-    note: ""
-  });
-  saveDB(db);
-
-  initPersonel();
-  toast("Mesai başlatıldı.");
-}
-
-async function onEnd(){
-  const open = activeShiftForUser(session.userId);
-  if(!open){
-    toast("Açık mesai bulunamadı.");
-    initPersonel();
-    return;
-  }
-  const loc = await ensureGeo();
-  if(!loc || loc.error){
-    $('pLocState').textContent = "Konum izni verilmedi / alınamadı.";
-    toast("Konum izni olmadan mesai bitirilemez.");
-    return;
-  }
-  $('pLocState').textContent = `OK · ${loc.lat.toFixed(5)}, ${loc.lng.toFixed(5)} (±${loc.acc}m)`;
-
-  open.endAt = nowISO();
-  open.endLoc = loc;
-  open.edited = true; // any update marks
-  open.editedAt = nowISO();
-
-  saveDB(db);
-  initPersonel();
-  toast("Mesai bitirildi.");
-}
-
-$('btnStart').onclick=onStart;
-$('btnEnd').onclick=onEnd;
-
-function shiftComputed(s){
-  const gross = (s.startAt && s.endAt) ? minutesBetween(s.startAt, s.endAt) : 0;
-  const brk = (s.startAt && s.endAt) ? computeBreak(gross) : 0;
-  const net = Math.max(0, gross - brk);
-  return { gross, brk, net };
-}
-
-function renderPersonelTable(){
-  const rows = db.shifts
-    .filter(s=>s.userId===session.userId)
-    .slice(0, 80);
-
-  $('pCountTag').textContent = `${rows.length} kayıt`;
-
-  const tbody = $('pRows');
-  tbody.innerHTML = "";
-
-  if(rows.length===0){
-    tbody.innerHTML = `<tr><td colspan="8" class="muted">Henüz kayıt yok.</td></tr>`;
-    return;
-  }
-
-  for(const s of rows){
-    const t = db.terminals.find(x=>x.id===s.terminalId)?.name || "—";
-    const c = shiftComputed(s);
-    const locTxt = (!s.startLoc) ? "—" : `<a href="${googleMapsLink(s.startLoc.lat,s.startLoc.lng)}" target="_blank">Başlangıç</a>` +
-      (s.endLoc ? ` · <a href="${googleMapsLink(s.endLoc.lat,s.endLoc.lng)}" target="_blank">Bitiş</a>` : "");
-    const badge = s.manual ? `<span class="tag">Manuel</span>` : (s.edited ? `<span class="tag blue">👁️</span>` : "");
-    tbody.insertAdjacentHTML('beforeend', `
-      <tr>
-        <td>${isoToDate(s.startAt)} ${badge}</td>
-        <td>${isoToTime(s.startAt)}</td>
-        <td>${s.endAt ? isoToTime(s.endAt) : '<span class="muted">—</span>'}</td>
-        <td>${s.endAt ? minsToHM(c.gross) : '—'}</td>
-        <td>${s.endAt ? minsToHM(c.brk) : '—'}</td>
-        <td>${s.endAt ? minsToHM(c.net) : '—'}</td>
-        <td>${t}</td>
-        <td>${locTxt}</td>
-      </tr>
-    `);
-  }
-}
-
-function refreshPersonelKpis(){
-  const today = todayKey();
-  const done = db.shifts.filter(s=>s.userId===session.userId && s.endAt);
-  const todayDone = done.filter(s=> (new Date(s.startAt)).toISOString().slice(0,10) === today);
-  let totalNet=0;
-  for(const s of todayDone) totalNet += shiftComputed(s).net;
-  $('kToday').textContent = minsToHM(totalNet);
-
-  const last = db.shifts.find(s=>s.userId===session.userId && s.endAt) || null;
-  if(!last){
-    $('kLast').textContent="—";
-    $('kLastSub').textContent="—";
-    return;
-  }
-  const t = db.terminals.find(x=>x.id===last.terminalId)?.name || "—";
-  const c = shiftComputed(last);
-  $('kLast').textContent = minsToHM(c.net);
-  $('kLastSub').textContent = `${isoToLocal(last.startAt)} → ${isoToTime(last.endAt)} · ${t}`;
-}
-
-/** =========================
- *  ADMIN
- * ========================= */
-let selectedUserId=null;
-
-function initAdmin(){
-  renderAdminList();
-  // default range: this week
-  const d = new Date();
-  const to = new Date(d);
-  const from = new Date(d); from.setDate(from.getDate()-7);
-  $('rangeTo').value = to.toISOString().slice(0,10);
-  $('rangeFrom').value = from.toISOString().slice(0,10);
-
-  $('aEmpty').style.display="";
-  $('aPanel').style.display="none";
-  selectedUserId=null;
-
-  $('aTitle').textContent="Seçim bekleniyor";
-  $('aSub').textContent="Soldan bir personel seçin.";
-  $('aStatusTag').textContent="—";
-  $('aStatusTag').className="tag";
-}
-
-function crown(u){ return u.owner ? " 👑" : ""; }
-
-function renderAdminList(){
-  const list = $('aList');
-  list.innerHTML="";
-
-  const people = db.users.filter(u=>u.role==="personel");
-  if(people.length===0){
-    list.innerHTML=`<div class="muted">Personel yok. “Personel ekle” ile ekleyin.</div>`;
-    return;
-  }
-  for(const u of people){
-    const open = activeShiftForUser(u.id);
-    const last = db.shifts.find(s=>s.userId===u.id)?.startAt;
-    const lastText = last ? isoToLocal(last) : "Kayıt yok";
-    const tName = db.terminals.find(t=>t.id===u.terminalId)?.name || "Terminal yok";
-    const flag = db.shifts.some(s=>s.userId===u.id && s.edited) ? " 👁️" : "";
-    const badge = open ? `<span class="tag green">Aktif</span>` : `<span class="tag">Pasif</span>`;
-    const item = document.createElement('div');
-    item.className="item";
-    item.innerHTML = `
-      <div>
-        <div class="name">${u.name}${flag}</div>
-        <div class="sub">${u.phone} · ${tName} · ${lastText}</div>
-      </div>
-      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-        ${badge}
-        <span class="tag">${last4(u.phone)}</span>
-      </div>
-    `;
-    item.onclick=()=>selectPersonel(u.id);
-    list.appendChild(item);
-  }
-}
-
-function selectPersonel(userId){
-  selectedUserId=userId;
-  const u = db.users.find(x=>x.id===userId);
-  if(!u) return;
-  $('aEmpty').style.display="none";
-  $('aPanel').style.display="";
-  $('aTitle').textContent = `${u.name}`;
-  $('aSub').textContent = `${u.phone} · PIN varsayılanı: son 4 hane`;
-  const open = activeShiftForUser(userId);
-  $('aStatusTag').textContent = open ? "Aktif mesai" : "Mesai kapalı";
-  $('aStatusTag').className = open ? "tag green" : "tag";
-
-  applyRange();
-}
-
-function betweenDates(iso, fromYmd, toYmd){
-  const ymd = (new Date(iso)).toISOString().slice(0,10);
-  return (ymd >= fromYmd && ymd <= toYmd);
-}
-
-function applyRange(){
-  if(!selectedUserId) return;
-  const from = $('rangeFrom').value;
-  const to = $('rangeTo').value;
-  if(!from || !to){ toast("Tarih aralığı seçin."); return; }
-
-  const rows = db.shifts
-    .filter(s=>s.userId===selectedUserId && s.startAt && betweenDates(s.startAt, from, to))
-    .sort((a,b)=> (new Date(b.startAt)) - (new Date(a.startAt)));
-
-  let totalNet=0, totalBreak=0;
-  const tbody = $('aRows');
-  tbody.innerHTML="";
-
-  if(rows.length===0){
-    tbody.innerHTML = `<tr><td colspan="9" class="muted">Bu aralıkta kayıt yok.</td></tr>`;
-  }else{
-    for(const s of rows){
-      const t = db.terminals.find(x=>x.id===s.terminalId)?.name || "—";
-      const c = shiftComputed(s);
-      totalNet += c.net;
-      totalBreak += c.brk;
-
-      const startLoc = s.startLoc ? `Başlangıç: <a href="${googleMapsLink(s.startLoc.lat,s.startLoc.lng)}" target="_blank">${s.startLoc.lat.toFixed(5)},${s.startLoc.lng.toFixed(5)}</a> (±${s.startLoc.acc}m)` : `<span class="muted">Başlangıç konumu yok</span>`;
-      const endLoc = s.endLoc ? `Bitiş: <a href="${googleMapsLink(s.endLoc.lat,s.endLoc.lng)}" target="_blank">${s.endLoc.lat.toFixed(5)},${s.endLoc.lng.toFixed(5)}</a> (±${s.endLoc.acc}m)` : `<span class="muted">Bitiş yok</span>`;
-      const locBlock = `<div style="line-height:1.25;">${startLoc}<br/>${endLoc}</div>`;
-
-      const mark = s.manual ? `<span class="tag">Manuel</span>` : (s.edited ? `<span class="tag blue">👁️</span>` : "");
-      tbody.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td>${isoToDate(s.startAt)} ${mark}</td>
-          <td>${isoToTime(s.startAt)}</td>
-          <td>${s.endAt ? isoToTime(s.endAt) : '<span class="muted">—</span>'}</td>
-          <td>${s.endAt ? minsToHM(c.gross) : '—'}</td>
-          <td>${s.endAt ? minsToHM(c.brk) : '—'}</td>
-          <td>${s.endAt ? minsToHM(c.net) : '—'}</td>
-          <td>${t}</td>
-          <td>${locBlock}</td>
-          <td>
-            <div class="right">
-              <button class="btn small" onclick="editShift('${s.id}')">Düzenle</button>
-              <button class="btn small" onclick="delShift('${s.id}')">Sil</button>
-            </div>
-          </td>
-        </tr>
-      `);
-    }
-  }
-
-  $('aTotalNet').textContent = minsToHM(totalNet);
-  $('aTotalBreak').textContent = minsToHM(totalBreak);
-  $('aCount').textContent = String(rows.length);
-}
-
-$('btnApplyRange').onclick=applyRange;
-
-window.delShift = function(shiftId){
-  if(!selectedUserId) return;
-  if(!confirm("Silmek istiyor musunuz?")) return;
-  const idx = db.shifts.findIndex(s=>s.id===shiftId);
-  if(idx>=0){
-    db.shifts.splice(idx,1);
-    saveDB(db);
-    renderAdminList();
-    applyRange();
-    toast("Kayıt silindi.");
-  }
-};
-
-window.editShift = function(shiftId){
-  const s = db.shifts.find(x=>x.id===shiftId);
-  if(!s) return;
-  const u = db.users.find(x=>x.id===s.userId);
-  const term = db.terminals.find(x=>x.id===s.terminalId);
-  const start = s.startAt ? s.startAt.slice(0,16) : "";
-  const end = s.endAt ? s.endAt.slice(0,16) : "";
-
-  const newStart = prompt(`Başlangıç (YYYY-MM-DDTHH:MM) [${u?.name||''}]`, start);
-  if(newStart===null) return;
-  const newEnd = prompt(`Bitiş (YYYY-MM-DDTHH:MM)`, end);
-  if(newEnd===null) return;
-
-  // minimal validation
-  if(!newStart || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(newStart)){
-    toast("Başlangıç formatı hatalı.");
-    return;
-  }
-  if(newEnd && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(newEnd)){
-    toast("Bitiş formatı hatalı.");
-    return;
-  }
-
-  s.startAt = new Date(newStart).toISOString();
-  s.endAt = newEnd ? new Date(newEnd).toISOString() : null;
-  s.manual = true;
-  s.edited = true;
-  s.editedAt = nowISO();
-  saveDB(db);
-  renderAdminList();
-  applyRange();
-  toast("Düzenlendi.");
-};
-
-$('btnManual').onclick=()=>{
-  if(!selectedUserId){ toast("Önce personel seçin."); return; }
-  const u = db.users.find(x=>x.id===selectedUserId);
-  const from = prompt("Tarih (YYYY-MM-DD) örn: 2026-02-10", new Date().toISOString().slice(0,10));
-  if(from===null) return;
-  const st = prompt("Başlangıç saat (HH:MM)", "08:00");
-  if(st===null) return;
-  const en = prompt("Bitiş saat (HH:MM) (boş bırak = açık mesai)", "17:00");
-  if(en===null) return;
-
-  const termId = u.terminalId || db.terminals[0]?.id;
-  const startAt = new Date(`${from}T${st}:00`).toISOString();
-  const endAt = en ? new Date(`${from}T${en}:00`).toISOString() : null;
-
-  const id = "s_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
-  db.shifts.unshift({
-    id,
-    userId: selectedUserId,
-    terminalId: termId,
-    plan: "",
-    startAt,
-    startLoc: null,
-    endAt,
-    endLoc: null,
-    manual: true,
-    edited: true,
-    editedAt: nowISO(),
-    note: "Manuel giriş"
-  });
-  saveDB(db);
-  renderAdminList();
-  applyRange();
-  toast("Manuel kayıt eklendi.");
-};
-
-/** --- Admin: add personel --- */
-$('btnAddPersonel').onclick=()=>{
-  const name = prompt("Personel adı soyadı");
-  if(!name) return;
-  const phoneRaw = prompt("Telefon (+905xxxxxxxxx veya 05xx...)");
-  if(!phoneRaw) return;
-  const phone = normalizePhone(phoneRaw);
-  if(!phone || phone.length < 12){ toast("Telefon formatı hatalı."); return; }
-  if(db.users.some(u=>u.phone===phone)){ toast("Bu telefon zaten kayıtlı."); return; }
-
-  const termId = $('promptTerminalId') || (db.terminals[0]?.id||"");
-  const id = "u_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
-
-  db.users.push({
-    id, role:"personel", phone, name,
-    pin: last4(phone), owner:false, createdAt: nowISO(),
-    terminalId: db.terminals[0]?.id || null
-  });
-  saveDB(db);
-  renderAdminList();
-  toast("Personel eklendi. Varsayılan PIN: son 4 hane.");
-};
-
-/** --- Admin: terminals --- */
-$('btnAddTerminal').onclick=()=>{
-  const name = prompt("Terminal adı (örn: 1001Derince Terminali)");
-  if(!name) return;
-  const id = "t_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
-  db.terminals.push({id, name});
-  saveDB(db);
-  renderAdminList();
-  toast("Terminal eklendi.");
-};
-
-/** --- Admin: admin list --- */
-$('btnAdmins').onclick=()=>{
-  const admins = db.users.filter(u=>u.role==="admin");
-  const lines = admins.map(a=>{
-    const canDelete = (!a.owner);
-    return `${a.name}${crown(a)} · ${a.phone}` + (canDelete ? "" : " (silinemez)");
-  }).join("\n");
-  const act = prompt(
-`Adminler:\n${lines}\n\nİşlem:\n1) Yeni admin ekle: "E"\n2) Admin sil: "S"\n(İptal: boş)`,
-""
-  );
-  if(!act) return;
-  if(act.toUpperCase()==="E"){
-    const name = prompt("Yeni admin adı");
-    if(!name) return;
-    const phoneRaw = prompt("Yeni admin telefon");
-    if(!phoneRaw) return;
-    const phone = normalizePhone(phoneRaw);
-    if(db.users.some(u=>u.phone===phone)){ toast("Bu telefon zaten kayıtlı."); return; }
-    const id = "u_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
-    db.users.push({ id, role:"admin", phone, name, pin:last4(phone), owner:false, createdAt: nowISO() });
-    saveDB(db);
-    toast("Yeni admin eklendi. Varsayılan PIN: son 4 hane.");
-    return;
-  }
-  if(act.toUpperCase()==="S"){
-    const targetRaw = prompt("Silinecek admin telefonu");
-    if(!targetRaw) return;
-    const target = normalizePhone(targetRaw);
-    const t = db.users.find(u=>u.role==="admin" && u.phone===target);
-    if(!t){ toast("Admin bulunamadı."); return; }
-    if(t.owner){
-      toast("Owner admin silinemez.");
-      return;
-    }
-    // Only owners can delete admins (non-owner). Enforce.
-    if(!session.owner){
-      toast("Sadece owner adminler admin silebilir.");
-      return;
-    }
-    if(!confirm(`${t.name} (${t.phone}) silinsin mi?`)) return;
-    db.users = db.users.filter(u=>u.id!==t.id);
-    saveDB(db);
-    toast("Admin silindi.");
-  }
-};
-
-/** --- Admin: change PIN --- */
-$('btnAdminPin').onclick=()=>{
-  const me = db.users.find(u=>u.id===session.userId);
-  if(!me) return;
-  const oldPin = prompt("Mevcut PIN");
-  if(oldPin===null) return;
-  if(oldPin !== me.pin){
-    toast("Mevcut PIN hatalı.");
-    return;
-  }
-  const newPin = prompt("Yeni PIN (4-8 hane)");
-  if(!newPin) return;
-  if(!/^\d{4,8}$/.test(newPin)){
-    toast("PIN formatı hatalı.");
-    return;
-  }
-  me.pin = newPin;
-  saveDB(db);
-  toast("PIN güncellendi.");
-};
-
-/** --- Bootstrap on load --- */
-(function boot(){
-  // service worker
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(()=>{});
-  }
-
-  if(session){
-    if(session.role==="admin"){ showView('admin'); initAdmin(); }
-    else { showView('personel'); initPersonel(); }
-  }else{
-    showView('login');
-  }
-
-  // Reload DB if other tab changes
-  window.addEventListener('storage', (e)=>{
-    if(e.key===STORAGE_KEY){
-      db = loadDB() || db;
-      if(session?.role==="admin"){ renderAdminList(); applyRange(); }
-      if(session?.role==="personel"){ initPersonel(); }
-    }
-  });
-})();
-</script>
+  <script src="./app.js"></script>
 </body>
 </html>
