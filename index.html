@@ -5,224 +5,257 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#2563eb" />
   <title>UZMAN Puantaj</title>
-
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" href="./icon-192.png" />
-  <link rel="apple-touch-icon" href="./icon-192.png" />
-
   <style>
     :root{
-      --bg:#070a12; --panel:#0b1220; --panel2:#0e1a33;
-      --muted:#93a4c7; --text:#e9f0ff;
-      --blue:#2563eb; --blue2:#60a5fa;
-      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
-      --line:rgba(255,255,255,.08);
+      --bg0:#050816;
+      --bg1:#0b1220;
+      --card:#0e1a33cc;
+      --card2:#0b1630cc;
+      --stroke:#20355a;
+      --stroke2:#2a4a7d;
+      --text:#e8eefc;
+      --muted:#a9b8d6;
+      --blue:#2563eb;
+      --blue2:#1d4ed8;
+      --green:#16a34a;
+      --red:#ef4444;
+      --amber:#f59e0b;
       --shadow: 0 18px 60px rgba(0,0,0,.55);
       --radius:18px;
-      --radius2:14px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --radius2:24px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; color:var(--text); font-family:var(--sans);
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
       background:
-        radial-gradient(1100px 420px at 20% -5%, rgba(37,99,235,.28), transparent 60%),
-        radial-gradient(900px 420px at 80% 0%, rgba(96,165,250,.18), transparent 55%),
-        linear-gradient(180deg, #050812, #060818 40%, #050612);
-      overflow:hidden;
+        radial-gradient(1100px 600px at 15% 5%, rgba(37,99,235,.22), transparent 60%),
+        radial-gradient(1000px 700px at 80% 25%, rgba(99,102,241,.14), transparent 65%),
+        radial-gradient(900px 500px at 50% 95%, rgba(16,185,129,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
     }
     a{color:inherit}
     .app{
-      height:100%;
       display:grid;
-      grid-template-columns: 280px 1fr;
-      gap:18px;
-      padding:18px;
+      grid-template-columns: 260px 1fr;
+      min-height:100vh;
     }
     .sidebar{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      min-height:0;
+      position:sticky; top:0;
+      height:100vh;
+      padding:18px;
+      border-right:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(10,16,33,.92), rgba(6,10,20,.92));
+      backdrop-filter: blur(10px);
     }
     .brand{
-      display:flex; align-items:center; gap:12px;
-      padding:18px 16px;
-      border-bottom:1px solid var(--line);
-      background: linear-gradient(180deg, rgba(37,99,235,.20), rgba(255,255,255,0));
+      display:flex; gap:12px; align-items:center;
+      padding:10px 10px 14px 10px;
+      border-radius:16px;
     }
     .logo{
-      width:42px; height:42px; border-radius:12px;
-      display:grid; place-items:center;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), rgba(255,255,255,.06)),
-                  linear-gradient(135deg, rgba(37,99,235,.85), rgba(96,165,250,.55));
-      border:1px solid rgba(255,255,255,.18);
+      width:42px;height:42px;border-radius:14px;
+      display:grid;place-items:center;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.25), transparent 55%), linear-gradient(135deg, rgba(37,99,235,.9), rgba(29,78,216,.95));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 30px rgba(37,99,235,.25);
+      flex:0 0 auto;
     }
-    .brand h1{font-size:16px; margin:0; letter-spacing:.2px}
-    .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
-    .nav{padding:10px; display:flex; flex-direction:column; gap:6px}
+    .brand h1{font-size:16px;margin:0}
+    .brand .sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .nav{
+      margin-top:10px;
+      display:flex; flex-direction:column; gap:8px;
+    }
     .nav button{
-      width:100%; text-align:left; border:1px solid transparent;
-      padding:10px 12px; border-radius:14px;
-      background: transparent; color:var(--text); cursor:pointer;
+      width:100%;
       display:flex; align-items:center; gap:10px;
-      transition: .15s ease;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      cursor:pointer;
+      transition: .18s ease;
     }
-    .nav button:hover{background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08)}
-    .nav button.active{background: rgba(37,99,235,.16); border-color: rgba(37,99,235,.35)}
-    .dot{width:10px; height:10px; border-radius:999px; background: rgba(96,165,250,.65); box-shadow:0 0 0 3px rgba(96,165,250,.18)}
-    .nav button .label{flex:1}
-    .nav button .pill{
-      font-size:11px; color:var(--muted); border:1px solid rgba(255,255,255,.10);
-      padding:3px 8px; border-radius:999px; background: rgba(255,255,255,.03)
-    }
-    .sidebar-footer{
-      margin-top:auto; padding:12px 14px; border-top:1px solid var(--line);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      color:var(--muted); font-size:12px;
-      background: rgba(0,0,0,.12);
+    .nav button:hover{transform: translateY(-1px); border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.08)}
+    .nav button.active{background: rgba(37,99,235,.16); border-color: rgba(37,99,235,.55)}
+    .dot{width:8px;height:8px;border-radius:50%; background: rgba(255,255,255,.25)}
+    .nav button.active .dot{background: rgba(37,99,235,.95)}
+    .badge{
+      margin-left:auto;
+      font-size:11px;
+      padding:4px 8px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
+      background: rgba(255,255,255,.03);
     }
     .main{
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
+      padding:22px;
     }
     .topbar{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:14px 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      border:1px solid var(--line); border-radius:var(--radius);
-      box-shadow: var(--shadow);
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:16px;
+      gap:12px;
     }
-    .crumb h2{margin:0; font-size:16px}
-    .crumb p{margin:2px 0 0; color:var(--muted); font-size:12px}
-    .actions{display:flex; gap:10px; align-items:center}
-    .chip{
-      display:flex; align-items:center; gap:8px;
-      padding:9px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.03);
-      color:var(--muted); font-size:12px;
+    .page-title{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .page-title h2{margin:0;font-size:20px}
+    .page-title .hint{color:var(--muted);font-size:12px}
+    .top-actions{display:flex; gap:10px; align-items:center}
+    .pill{
+      display:flex; gap:8px; align-items:center;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
     }
     .btn{
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
+      background: rgba(255,255,255,.04);
       color:var(--text);
       padding:10px 12px;
       border-radius:14px;
       cursor:pointer;
-      transition:.15s ease;
+      transition:.18s ease;
+      font-weight:600;
     }
-    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.20)}
-    .btn.primary{background: rgba(37,99,235,.20); border-color: rgba(37,99,235,.45)}
-    .btn.danger{background: rgba(239,68,68,.14); border-color: rgba(239,68,68,.38)}
-    .btn.ok{background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.38)}
-    .content{
-      min-height:0;
+    .btn:hover{transform: translateY(-1px); border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.10)}
+    .btn.primary{background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(29,78,216,.95)); border-color: rgba(37,99,235,.60)}
+    .btn.primary:hover{background: linear-gradient(135deg, rgba(37,99,235,1), rgba(29,78,216,1))}
+    .btn.danger{background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.28)}
+    .btn.good{background: rgba(22,163,74,.14); border-color: rgba(22,163,74,.30)}
+    .grid{
       display:grid;
-      grid-template-columns: 1.25fr .75fr;
+      grid-template-columns: 1.6fr 1fr;
       gap:14px;
+      align-items:start;
     }
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
+      background: radial-gradient(900px 300px at 15% 0%, rgba(37,99,235,.18), transparent 55%), rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius2);
       box-shadow: var(--shadow);
       overflow:hidden;
-      min-height:0;
     }
-    .card .head{
+    .card .hd{
       padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px solid var(--line);
-      background: rgba(0,0,0,.12);
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.00));
     }
-    .card .head h3{margin:0; font-size:14px}
-    .card .head small{color:var(--muted)}
-    .card .body{padding:14px 16px; min-height:0; overflow:auto}
-    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
-    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
+    .card .hd h3{margin:0;font-size:14px}
+    .card .bd{padding:16px}
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .field{flex:1 1 220px; min-width:200px}
+    .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
     input, select, textarea{
       width:100%;
       padding:12px 12px;
       border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.18);
       color:var(--text);
       outline:none;
     }
+    input:focus, select:focus, textarea:focus{border-color: rgba(37,99,235,.55); box-shadow: 0 0 0 3px rgba(37,99,235,.18)}
     textarea{min-height:110px; resize:vertical}
-    input:focus, select:focus, textarea:focus{border-color: rgba(96,165,250,.55); box-shadow: 0 0 0 3px rgba(96,165,250,.12)}
-    .hint{font-size:12px; color:var(--muted); margin-top:6px}
+    .mini{
+      display:grid; grid-template-columns: repeat(3,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    .stat{
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.10);
+    }
+    .stat .k{font-size:12px;color:var(--muted)}
+    .stat .v{font-size:18px;font-weight:800;margin-top:6px}
     .alert{
       margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
       border:1px solid rgba(239,68,68,.35);
       background: rgba(239,68,68,.10);
-      padding:10px 12px;
-      border-radius:14px;
-      color: rgba(255,255,255,.92);
+      color:#ffd4d4;
       font-size:12px;
-      display:none;
+    }
+    .ok{
+      border-color: rgba(22,163,74,.35);
+      background: rgba(22,163,74,.10);
+      color:#d7ffe5;
+    }
+    .warn{
+      border-color: rgba(245,158,11,.35);
+      background: rgba(245,158,11,.10);
+      color:#fff1d6;
+    }
+    .log{
+      font-family:var(--mono);
+      font-size:11px;
+      line-height:1.35;
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:10px 12px;
+      max-height:220px;
+      overflow:auto;
       white-space:pre-wrap;
     }
-    .okline{
-      border:1px solid rgba(34,197,94,.30);
-      background: rgba(34,197,94,.08);
-      padding:10px 12px;
-      border-radius:14px;
-      color: rgba(255,255,255,.92);
+    .table{
+      width:100%;
+      border-collapse:collapse;
       font-size:12px;
-      display:none;
     }
-    .kpi{
-      display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    .table th, .table td{
+      text-align:left;
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      vertical-align:top;
     }
-    .kpi .box{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.16);
-      border-radius:16px;
-      padding:12px;
-    }
-    .kpi .box b{display:block; font-size:18px}
-    .kpi .box span{display:block; margin-top:4px; color:var(--muted); font-size:12px}
-    table{width:100%; border-collapse:collapse; font-size:12px}
-    th,td{padding:10px 10px; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top}
-    th{color:var(--muted); font-weight:600; text-align:left; position:sticky; top:0; background: rgba(8,10,18,.95); z-index:2}
-    td .mono{font-family:var(--mono)}
-    .badge{
-      font-size:11px; padding:3px 8px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
+    .table th{color:var(--muted); font-weight:700; position:sticky; top:0; background: rgba(10,16,33,.92)}
+    .table tr:hover td{background: rgba(37,99,235,.06)}
+    .chip{
       display:inline-flex; align-items:center; gap:6px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      font-size:11px;
+      color:var(--muted);
+      white-space:nowrap;
     }
-    .badge.ok{border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.10); color: rgba(220,255,235,.92)}
-    .badge.bad{border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.10); color: rgba(255,225,225,.92)}
-    .badge.warn{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); color: rgba(255,246,226,.92)}
+    .chip.good{border-color: rgba(22,163,74,.30); background: rgba(22,163,74,.08); color:#d7ffe5}
+    .chip.bad{border-color: rgba(239,68,68,.30); background: rgba(239,68,68,.08); color:#ffd4d4}
+    .chip.warn{border-color: rgba(245,158,11,.32); background: rgba(245,158,11,.08); color:#fff1d6}
     .split{
-      display:flex; gap:10px; flex-wrap:wrap;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
     }
-    .split > * {flex:1 1 220px}
-    .small{font-size:12px; color:var(--muted)}
-    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-    .row .grow{flex:1}
-    .right{margin-left:auto}
-    .hidden{display:none !important}
-    .mobile-only{display:none}
-
-    /* Responsive */
-    @media (max-width: 1000px){
-      body{overflow:auto}
-      .app{grid-template-columns: 1fr; padding:12px; overflow:visible}
-      .sidebar{position:sticky; top:12px; z-index:5}
-      .content{grid-template-columns:1fr}
-      .mobile-only{display:inline-flex}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .hide{display:none !important}
+    .maplink{color:#bcd0ff}
+    .footer-note{margin-top:12px;color:var(--muted);font-size:12px}
+    @media (max-width: 980px){
+      .app{grid-template-columns: 1fr}
+      .sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}
+      .grid{grid-template-columns: 1fr}
+      .mini{grid-template-columns: 1fr}
+      .split{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -232,333 +265,1144 @@
       <div class="brand">
         <div class="logo" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2l8 4v6c0 5-3.2 9.4-8 10-4.8-.6-8-5-8-10V6l8-4z" stroke="white" stroke-opacity=".9" stroke-width="1.5"/>
-            <path d="M8.2 12.2l2.3 2.3 5.3-5.5" stroke="white" stroke-opacity=".95" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
+            <path d="M12 6v12" stroke="rgba(255,255,255,.92)" stroke-width="1.6" opacity=".7"/>
           </svg>
         </div>
         <div>
           <h1>UZMAN Puantaj</h1>
-          <p id="envBadge">PWA • Canlı sürüm</p>
+          <div class="sub" id="subline">PWA • Canlı sürüm (Supabase)</div>
         </div>
       </div>
 
       <div class="nav">
-        <button data-route="home" class="active"><span class="dot"></span><span class="label">Ana Sayfa</span><span class="pill">Giriş</span></button>
-        <button data-route="personnel"><span class="dot"></span><span class="label">Personel</span></button>
-        <button data-route="admin"><span class="dot"></span><span class="label">Admin Paneli</span></button>
-        <button data-route="setup"><span class="dot"></span><span class="label">Kurulum & Ayarlar</span><span class="pill">Supabase</span></button>
+        <button class="active" data-page="home"><span class="dot"></span> Ana Sayfa <span class="badge" id="badgeLogin">Giriş</span></button>
+        <button data-page="personnel"><span class="dot"></span> Personel</button>
+        <button data-page="admin"><span class="dot"></span> Admin Paneli</button>
+        <button data-page="setup"><span class="dot"></span> Kurulum & Ayarlar <span class="badge">Supabase</span></button>
       </div>
 
-      <div class="sidebar-footer">
-        <span id="whoami">—</span>
-        <button id="btnLogout" class="btn hidden">Çıkış</button>
+      <div class="footer-note">
+        Konum kaydı HTTPS üzerinde çalışır. GitHub Pages uygundur.
       </div>
     </aside>
 
     <main class="main">
       <div class="topbar">
-        <div class="crumb">
+        <div class="page-title">
           <h2 id="pageTitle">Ana Sayfa</h2>
-          <p id="pageSub">Giriş ve durum</p>
+          <div class="hint" id="pageHint">Giriş ve durum</div>
         </div>
-        <div class="actions">
-          <div class="chip" title="PWA durumu">
-            <span id="pwaDot" class="badge warn">•</span>
-            <span id="pwaText">Service Worker kontrol ediliyor…</span>
-          </div>
-          <button id="btnInstall" class="btn primary hidden">Yükle</button>
-          <button id="btnHardRefresh" class="btn mobile-only">Önbelleği sıfırla</button>
+        <div class="top-actions">
+          <div class="pill" id="pillSw"><span id="swDot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)"></span> <span id="swText">Service Worker</span></div>
+          <button class="btn" id="btnHardRefresh" title="Önbelleği temizleyip yenile">Yükle</button>
         </div>
       </div>
 
-      <section class="content">
-        <!-- LEFT -->
-        <div class="card" id="leftCard">
-          <div class="head">
-            <h3 id="leftHead">Giriş</h3>
-            <small id="leftHint">Admin / Personel</small>
-          </div>
-          <div class="body">
-
-            <!-- HOME / LOGIN -->
-            <div id="viewHome">
-              <div class="grid2">
-                <div>
+      <!-- HOME -->
+      <section id="page-home">
+        <div class="grid">
+          <div class="card">
+            <div class="hd"><h3>Giriş</h3><span class="chip" id="chipMode">Admin / Personel</span></div>
+            <div class="bd">
+              <div class="row">
+                <div class="field">
                   <label>Mod</label>
-                  <select id="loginMode">
+                  <select id="mode">
                     <option value="admin">Admin</option>
                     <option value="personnel">Personel</option>
                   </select>
                 </div>
-                <div>
+                <div class="field">
                   <label>Telefon</label>
-                  <input id="loginPhone" inputmode="numeric" placeholder="5xxxxxxxxx" />
+                  <input id="phone" placeholder="+90..." autocomplete="tel" />
                 </div>
-              </div>
-
-              <div style="height:10px"></div>
-
-              <div class="grid2">
-                <div>
+                <div class="field">
                   <label>PIN</label>
-                  <input id="loginPin" inputmode="numeric" placeholder="••••" />
-                  <div class="hint" id="pinHint">Personel için varsayılan: telefonun son 4 hanesi.</div>
-                </div>
-                <div style="display:flex; align-items:flex-end; gap:10px">
-                  <button id="btnLogin" class="btn primary" style="width:100%">Giriş Yap</button>
+                  <input id="pin" placeholder="••••" inputmode="numeric" maxlength="8" />
+                  <div style="margin-top:6px;font-size:11px;color:var(--muted)">Personel için varsayılan: telefonun son 4 hanesi.</div>
                 </div>
               </div>
 
-              <div class="kpi" style="margin-top:14px">
-                <div class="box"><b id="kpiUsers">—</b><span>Kayıtlı kullanıcı</span></div>
-                <div class="box"><b id="kpiTerminals">—</b><span>Terminal</span></div>
-                <div class="box"><b id="kpiToday">—</b><span>Bugün kayıt</span></div>
+              <div class="actions">
+                <button class="btn primary" id="btnLogin">Giriş Yap</button>
+                <button class="btn" id="btnLogout">Çıkış</button>
               </div>
 
-              <div class="alert" id="loginError"></div>
-              <div class="okline" id="loginOk"></div>
+              <div class="mini">
+                <div class="stat">
+                  <div class="k">Kayıtlı kullanıcı</div>
+                  <div class="v" id="statUsers">-</div>
+                </div>
+                <div class="stat">
+                  <div class="k">Terminal</div>
+                  <div class="v" id="statTerms">-</div>
+                </div>
+                <div class="stat">
+                  <div class="k">Bugün kayıt</div>
+                  <div class="v" id="statToday">-</div>
+                </div>
+              </div>
+
+              <div class="alert hide" id="homeAlert"></div>
             </div>
+          </div>
 
-            <!-- PERSONNEL -->
-            <div id="viewPersonnel" class="hidden">
-              <div class="row">
-                <div class="badge" id="meBadge">—</div>
-                <div class="right split" style="justify-content:flex-end">
-                  <button class="btn ok" id="btnStart">Başlandı</button>
-                  <button class="btn danger" id="btnEnd">Bitti</button>
-                </div>
-              </div>
-
-              <div style="height:12px"></div>
-
-              <div class="split">
+          <div class="card">
+            <div class="hd"><h3>Durum</h3><span class="chip">Konum ve servis</span></div>
+            <div class="bd">
+              <div class="row" style="align-items:center; justify-content:space-between">
                 <div>
-                  <label>Terminal</label>
-                  <select id="personnelTerminal"></select>
-                  <div class="hint">Konum izni yoksa mesai başlatılamaz.</div>
+                  <div class="k" style="font-size:12px;color:var(--muted)">Konum Sonucu</div>
+                  <div style="margin-top:6px;font-size:13px" id="geoStatus">Henüz istenmedi.</div>
                 </div>
-                <div>
-                  <label>Durum</label>
-                  <div id="shiftStatus" class="badge warn">—</div>
-                  <div class="hint" id="shiftHint">—</div>
-                </div>
+                <button class="btn good" id="btnGeoTest">Konumu test et</button>
               </div>
 
-              <div style="height:12px"></div>
-
-              <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
-                <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
-                  <h3>Mesai çizelgesi (son 14 gün)</h3>
-                  <small>9 saati geçen mesai: 1 saat yemek düşülür</small>
-                </div>
-                <div class="body" style="max-height:360px">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Tarih</th>
-                        <th>Terminal</th>
-                        <th>Başladı</th>
-                        <th>Bitti</th>
-                        <th>Net Süre</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tblMyShifts"></tbody>
-                  </table>
-                </div>
+              <div style="margin-top:10px;color:var(--muted);font-size:12px">
+                Konum, HTTPS üzerinde çalışır. VPN / tarayıcı izinleri konumu etkileyebilir.
               </div>
 
-              <div class="alert" id="personnelError"></div>
-              <div class="okline" id="personnelOk"></div>
+              <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+                <div class="chip">Canlı log</div>
+                <div style="font-size:11px;color:var(--muted)">Son 40 satır</div>
+              </div>
+              <div class="log" id="log"></div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <!-- ADMIN -->
-            <div id="viewAdmin" class="hidden">
-              <div class="row">
-                <div class="badge" id="adminBadge">—</div>
-                <button class="btn primary right" id="btnRefreshAdmin">Yenile</button>
-              </div>
-
-              <div style="height:12px"></div>
-
-              <div class="split">
-                <div>
-                  <label>Personel seç</label>
-                  <select id="adminPickUser"></select>
-                </div>
-                <div>
-                  <label>Tarih aralığı</label>
-                  <div class="grid2">
-                    <input id="adminFrom" type="date" />
-                    <input id="adminTo" type="date" />
+      <!-- PERSONNEL -->
+      <section id="page-personnel" class="hide">
+        <div class="card">
+          <div class="hd"><h3>Personel Ekranı</h3><span class="chip" id="meChip">-</span></div>
+          <div class="bd">
+            <div class="split">
+              <div class="card" style="box-shadow:none;background:rgba(255,255,255,.02)">
+                <div class="hd"><h3>Mesai</h3><span class="chip" id="shiftChip">-</span></div>
+                <div class="bd">
+                  <div class="row">
+                    <div class="field">
+                      <label>Terminal</label>
+                      <select id="personTerminal"></select>
+                      <div style="margin-top:6px;font-size:11px;color:var(--muted)">Başlatmak için terminal seç.</div>
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="btn primary" id="btnStart">Başlandı</button>
+                    <button class="btn danger" id="btnStop">Bitti</button>
+                  </div>
+                  <div class="alert hide" id="personAlert"></div>
+                  <div class="footer-note">
+                    Kural: Konum izni yoksa mesai başlatılamaz / bitirilemez.
                   </div>
                 </div>
               </div>
 
-              <div style="height:12px"></div>
-
-              <div class="row">
-                <button class="btn" id="btnAdminLoad">Listele</button>
-                <button class="btn" id="btnAdminManual">Manuel düzeltme</button>
-                <button class="btn" id="btnAdminUsers">Kullanıcı yönetimi</button>
-                <button class="btn" id="btnAdminTerminals">Terminal ekle</button>
-              </div>
-
-              <div class="alert" id="adminError"></div>
-              <div class="okline" id="adminOk"></div>
-
-              <div style="height:12px"></div>
-
-              <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
-                <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
-                  <h3>Seçili personel kayıtları</h3>
-                  <small id="adminSummary">—</small>
-                </div>
-                <div class="body" style="max-height:420px">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Tarih</th>
-                        <th>Terminal</th>
-                        <th>Başlandı</th>
-                        <th>Bitti</th>
-                        <th>Net</th>
-                        <th>Konum</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tblAdminShifts"></tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- SETUP -->
-            <div id="viewSetup" class="hidden">
-              <div class="row">
-                <div class="grow">
-                  <div class="small">Bu ekran sadece anahtarları girip test etmek için. Anahtarlar cihazda saklanır.</div>
-                </div>
-                <button id="btnClearLocal" class="btn danger">Bu cihazı sıfırla</button>
-              </div>
-
-              <div style="height:12px"></div>
-
-              <div class="grid2">
-                <div>
-                  <label>Supabase Project URL</label>
-                  <input id="sbUrl" placeholder="https://xxxx.supabase.co" />
-                </div>
-                <div>
-                  <label>Supabase Public (anon) Key</label>
-                  <input id="sbAnon" placeholder="eyJhbGci..." />
-                </div>
-              </div>
-
-              <div style="height:12px"></div>
-
-              <div class="row">
-                <button id="btnSaveSetup" class="btn primary">Kaydet</button>
-                <button id="btnTestSetup" class="btn">Bağlantıyı test et</button>
-              </div>
-
-              <div class="alert" id="setupError"></div>
-              <div class="okline" id="setupOk"></div>
-
-              <div style="height:14px"></div>
-
-              <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
-                <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
-                  <h3>Supabase SQL (Tablolar)</h3>
-                  <small>Supabase → SQL Editor içine yapıştırıp çalıştır</small>
-                </div>
-                <div class="body">
-                  <pre id="sqlBlock" style="white-space:pre-wrap; font-family:var(--mono); font-size:12px; margin:0; color:rgba(233,240,255,.92)"></pre>
+              <div class="card" style="box-shadow:none;background:rgba(255,255,255,.02)">
+                <div class="hd"><h3>Günlük Çizelge</h3><span class="chip">Geriye dönük</span></div>
+                <div class="bd">
+                  <div class="row">
+                    <div class="field">
+                      <label>Başlangıç</label>
+                      <input type="date" id="pFrom" />
+                    </div>
+                    <div class="field">
+                      <label>Bitiş</label>
+                      <input type="date" id="pTo" />
+                    </div>
+                    <div class="field" style="flex:0 0 140px;min-width:140px">
+                      <label>&nbsp;</label>
+                      <button class="btn" id="btnPRefresh" style="width:100%">Getir</button>
+                    </div>
+                  </div>
+                  <div style="margin-top:10px;overflow:auto;max-height:320px;border-radius:16px;border:1px solid rgba(255,255,255,.08)">
+                    <table class="table" id="pTable">
+                      <thead>
+                        <tr>
+                          <th>Tarih</th>
+                          <th>Başladı</th>
+                          <th>Bitti</th>
+                          <th>Süre</th>
+                          <th>Yemek</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                  <div class="footer-note">
+                    Kural: 9 saati geçen çalışmada 1 saat yemek molası düşülür.
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
+      </section>
 
-        <!-- RIGHT -->
-        <div class="card" id="rightCard">
-          <div class="head">
-            <h3 id="rightHead">Durum</h3>
-            <small>Konum ve servis</small>
-          </div>
-          <div class="body">
-            <div class="badge warn" id="geoBadge">Konum Sonucu: Henüz istenmedi.</div>
-            <div style="height:10px"></div>
-            <button id="btnGeoTest" class="btn ok" style="width:100%">Konumu test et</button>
-            <div class="hint" style="margin-top:10px">
-              Konum, <b>HTTPS</b> üzerinde çalışır (GitHub Pages uygundur). VPN / tarayıcı izinleri konumu etkileyebilir.
-            </div>
+      <!-- ADMIN -->
+      <section id="page-admin" class="hide">
+        <div class="card">
+          <div class="hd"><h3>Admin Paneli</h3><span class="chip" id="adminChip">-</span></div>
+          <div class="bd">
+            <div class="split">
+              <div class="card" style="box-shadow:none;background:rgba(255,255,255,.02)">
+                <div class="hd"><h3>Personel Yönetimi</h3><span class="chip">Kullanıcılar</span></div>
+                <div class="bd">
+                  <div class="row">
+                    <div class="field">
+                      <label>Telefon (TR)</label>
+                      <input id="aPhone" placeholder="+905..." />
+                    </div>
+                    <div class="field">
+                      <label>Ad Soyad</label>
+                      <input id="aName" placeholder="İsim" />
+                    </div>
+                    <div class="field">
+                      <label>Rol</label>
+                      <select id="aRole">
+                        <option value="personnel">personel</option>
+                        <option value="admin">admin</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>PIN</label>
+                      <input id="aPin" placeholder="Varsayılan: son 4 hane" />
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="btn primary" id="btnAddUser">Personel Ekle</button>
+                    <button class="btn" id="btnRefreshUsers">Listeyi Yenile</button>
+                  </div>
 
-            <div style="height:14px"></div>
-            <div class="card" style="box-shadow:none; border-radius:16px; border-color: rgba(255,255,255,.10); background: rgba(0,0,0,.14)">
-              <div class="head" style="background:transparent; border-bottom:1px solid rgba(255,255,255,.08)">
-                <h3>Canlı log</h3><small>Son 30 satır</small>
+                  <div style="margin-top:12px;overflow:auto;max-height:280px;border-radius:16px;border:1px solid rgba(255,255,255,.08)">
+                    <table class="table" id="uTable">
+                      <thead>
+                        <tr>
+                          <th>Ad</th>
+                          <th>Telefon</th>
+                          <th>Rol</th>
+                          <th>Aktif</th>
+                          <th>İşlem</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                  <div class="alert hide" id="adminAlert"></div>
+                </div>
               </div>
-              <div class="body" style="max-height:360px">
-                <pre id="log" style="white-space:pre-wrap; font-family:var(--mono); font-size:12px; margin:0; color:rgba(233,240,255,.88)"></pre>
+
+              <div class="card" style="box-shadow:none;background:rgba(255,255,255,.02)">
+                <div class="hd"><h3>Terminal Yönetimi</h3><span class="chip">Lokasyon</span></div>
+                <div class="bd">
+                  <div class="row">
+                    <div class="field">
+                      <label>Terminal Adı</label>
+                      <input id="tName" placeholder="Örn. Derince Terminali" />
+                    </div>
+                    <div class="field" style="flex:0 0 180px;min-width:180px">
+                      <label>&nbsp;</label>
+                      <button class="btn primary" id="btnAddTerm" style="width:100%">Terminal Ekle</button>
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="btn" id="btnRefreshTerms">Listeyi Yenile</button>
+                  </div>
+
+                  <div style="margin-top:12px;overflow:auto;max-height:220px;border-radius:16px;border:1px solid rgba(255,255,255,.08)">
+                    <table class="table" id="tTable">
+                      <thead>
+                        <tr><th>Terminal</th><th>İşlem</th></tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+
+                  <div class="card" style="margin-top:12px;box-shadow:none;background:rgba(255,255,255,.02)">
+                    <div class="hd"><h3>Rapor</h3><span class="chip">Tarih aralığı</span></div>
+                    <div class="bd">
+                      <div class="row">
+                        <div class="field">
+                          <label>Personel</label>
+                          <select id="rUser"></select>
+                        </div>
+                        <div class="field">
+                          <label>Başlangıç</label>
+                          <input type="date" id="rFrom" />
+                        </div>
+                        <div class="field">
+                          <label>Bitiş</label>
+                          <input type="date" id="rTo" />
+                        </div>
+                        <div class="field" style="flex:0 0 140px;min-width:140px">
+                          <label>&nbsp;</label>
+                          <button class="btn" id="btnReport" style="width:100%">Getir</button>
+                        </div>
+                      </div>
+
+                      <div style="margin-top:10px;overflow:auto;max-height:260px;border-radius:16px;border:1px solid rgba(255,255,255,.08)">
+                        <table class="table" id="rTable">
+                          <thead>
+                            <tr>
+                              <th>Tarih</th><th>Başlandı</th><th>Bitti</th><th>Süre</th><th>Yemek</th><th>Konum</th><th>Manuel</th>
+                            </tr>
+                          </thead>
+                          <tbody></tbody>
+                        </table>
+                      </div>
+
+                      <div class="actions" style="margin-top:10px">
+                        <button class="btn" id="btnManualOpen">Manuel Mesai Düzelt</button>
+                      </div>
+
+                      <div class="card hide" id="manualBox" style="margin-top:10px;box-shadow:none;background:rgba(0,0,0,.10)">
+                        <div class="hd"><h3>Manuel Düzeltme</h3><span class="chip warn">Sadece admin</span></div>
+                        <div class="bd">
+                          <div class="row">
+                            <div class="field">
+                              <label>Personel</label>
+                              <select id="mUser"></select>
+                            </div>
+                            <div class="field">
+                              <label>Terminal</label>
+                              <select id="mTerm"></select>
+                            </div>
+                            <div class="field">
+                              <label>Tarih</label>
+                              <input type="date" id="mDay" />
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="field">
+                              <label>Başlangıç (HH:MM)</label>
+                              <input id="mStart" placeholder="08:00" />
+                            </div>
+                            <div class="field">
+                              <label>Bitiş (HH:MM)</label>
+                              <input id="mEnd" placeholder="17:30" />
+                            </div>
+                            <div class="field">
+                              <label>Not</label>
+                              <input id="mNote" placeholder="Unutuldu / düzeltme sebebi" />
+                            </div>
+                          </div>
+                          <div class="actions">
+                            <button class="btn primary" id="btnManualSave">Kaydet</button>
+                            <button class="btn" id="btnManualClose">Kapat</button>
+                          </div>
+                          <div class="alert hide" id="manualAlert"></div>
+                        </div>
+                      </div>
+
+                      <div class="footer-note">
+                        Kural: 9 saati geçen çalışmada 1 saat yemek düşülür (raporda gösterilir).
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
 
           </div>
         </div>
       </section>
+
+      <!-- SETUP -->
+      <section id="page-setup" class="hide">
+        <div class="card">
+          <div class="hd"><h3>Kurulum & Ayarlar</h3><span class="chip">Supabase</span></div>
+          <div class="bd">
+            <div class="alert warn" style="border-radius:18px">
+              Bu ekran sadece anahtarları girip test etmek için. Anahtarlar cihazda saklanır.
+            </div>
+            <div class="row" style="margin-top:12px">
+              <div class="field">
+                <label>Supabase Project URL</label>
+                <input id="sbUrl" placeholder="https://xxxxx.supabase.co" />
+              </div>
+              <div class="field">
+                <label>Supabase Public Key (anon)</label>
+                <input id="sbKey" placeholder="eyJ..." />
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn primary" id="btnSaveSb">Kaydet</button>
+              <button class="btn" id="btnTestSb">Bağlantıyı Test Et</button>
+            </div>
+            <div class="alert hide" id="setupAlert"></div>
+
+            <div style="margin-top:14px;color:var(--muted);font-size:12px">
+              <b>SQL (Tablolar)</b><br/>
+              Supabase → SQL Editor içine yapıştırıp çalıştır.
+            </div>
+            <div class="log" id="sqlBox"></div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./app.js"></script>
-  <script>
-    // PWA install button
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('btnInstall').classList.remove('hidden');
-    });
-    document.getElementById('btnInstall').addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      document.getElementById('btnInstall').classList.add('hidden');
-    });
+<script>
+/* ===========================
+   CONFIG & STATE
+=========================== */
+const APP_VERSION = "v1.0.0-supabase";
+const LS = {
+  SB_URL: "uzman.sb.url",
+  SB_KEY: "uzman.sb.key",
+  SESSION: "uzman.session",
+};
 
-    // SW register
-    (async () => {
-      const pwaDot = document.getElementById('pwaDot');
-      const pwaText = document.getElementById('pwaText');
+const DEFAULTS = {
+  // İstersen buraya sabit yazabilirsin (GitHub Pages için):
+  // SB_URL: "https://xxxxx.supabase.co",
+  // SB_KEY: "sb_publishable_....",
+  SB_URL: "",
+  SB_KEY: ""
+};
+
+const state = {
+  page: "home",
+  session: null,      // { userId, role, phone, name, isOwner }
+  userRow: null,
+  terminals: [],
+  users: [],
+  activeShift: null,  // { id, started_at, ... }
+};
+
+/* ===========================
+   UTIL
+=========================== */
+const $ = (id) => document.getElementById(id);
+const logEl = $("log");
+function log(msg){
+  const ts = new Date().toLocaleTimeString("tr-TR", {hour12:false});
+  const line = `[${ts}] ${msg}`;
+  logEl.textContent = (logEl.textContent ? (logEl.textContent + "\n") : "") + line;
+  const lines = logEl.textContent.split("\n");
+  if(lines.length > 40) logEl.textContent = lines.slice(-40).join("\n");
+  logEl.scrollTop = logEl.scrollHeight;
+  console.log(line);
+}
+function showAlert(el, msg, type="error"){
+  el.classList.remove("hide","ok","warn");
+  el.textContent = msg;
+  if(type==="ok") el.classList.add("ok");
+  if(type==="warn") el.classList.add("warn");
+}
+function hideAlert(el){ el.classList.add("hide"); el.textContent=""; }
+
+function normPhone(raw){
+  const digits = (raw || "").replace(/\D/g,"");
+  // TR için +90 vs. farklarını normalize et: başında 0 varsa 90'a çevirme yapmıyoruz; DB'de ne varsa onunla eşleşmek için
+  // Tavsiye: DB'de "90xxxxxxxxxx" formatı kullan.
+  // Eğer kullanıcı 0 ile girdiyse ve 11 hane ise baştaki 0'ı 90 yap.
+  if(digits.length===11 && digits.startsWith("0")) return "90" + digits.slice(1);
+  return digits;
+}
+function fmtDate(d){
+  const dt = (d instanceof Date) ? d : new Date(d);
+  return dt.toLocaleDateString("tr-TR");
+}
+function fmtTime(d){
+  const dt = (d instanceof Date) ? d : new Date(d);
+  return dt.toLocaleTimeString("tr-TR", {hour:"2-digit", minute:"2-digit"});
+}
+function msToHM(ms){
+  const totalMin = Math.max(0, Math.round(ms/60000));
+  const h = Math.floor(totalMin/60);
+  const m = totalMin%60;
+  return `${h}sa ${String(m).padStart(2,"0")}dk`;
+}
+function calcLunch(ms){
+  // 9 saat üstü => 1 saat düş
+  const nine = 9*60*60*1000;
+  return ms > nine ? 60*60*1000 : 0;
+}
+function mapLink(lat,lng){
+  if(lat==null||lng==null) return "";
+  return `https://www.google.com/maps?q=${lat},${lng}`;
+}
+
+/* ===========================
+   SUPABASE REST
+=========================== */
+function getSb(){
+  const url = localStorage.getItem(LS.SB_URL) || DEFAULTS.SB_URL;
+  const key = localStorage.getItem(LS.SB_KEY) || DEFAULTS.SB_KEY;
+  return { url, key };
+}
+async function sbFetch(path, opts={}){
+  const {url, key} = getSb();
+  if(!url || !key) throw new Error("Supabase ayarları eksik. Kurulum & Ayarlar'dan gir.");
+  const full = url.replace(/\/$/,"") + "/rest/v1/" + path.replace(/^\//,"");
+  const headers = {
+    "apikey": key,
+    "Authorization": "Bearer " + key,
+    "Content-Type": "application/json",
+    ... (opts.headers || {})
+  };
+  const res = await fetch(full, {
+    method: opts.method || "GET",
+    headers,
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  const text = await res.text();
+  let data = null;
+  try{ data = text ? JSON.parse(text) : null; }catch(e){ data = text; }
+  if(!res.ok){
+    const msg = (data && data.message) ? data.message : (typeof data === "string" ? data : "Supabase hata");
+    throw new Error(`Supabase hata (${res.status}): ${msg}`);
+  }
+  return data;
+}
+
+/* ===========================
+   GEOLOCATION (HTTPS required)
+=========================== */
+function getGeo(){
+  return new Promise((resolve,reject)=>{
+    if(!navigator.geolocation) return reject(new Error("Bu cihazda geolocation yok."));
+    navigator.geolocation.getCurrentPosition(
+      (pos)=> resolve(pos),
+      (err)=> reject(err),
+      { enableHighAccuracy:true, timeout:15000, maximumAge:0 }
+    );
+  });
+}
+async function requireGeo(){
+  try{
+    const pos = await getGeo();
+    const {latitude, longitude, accuracy} = pos.coords;
+    $("geoStatus").textContent = `OK • ${latitude.toFixed(6)}, ${longitude.toFixed(6)} (±${Math.round(accuracy)}m)`;
+    log(`Konum OK: ${latitude.toFixed(6)}, ${longitude.toFixed(6)} ±${Math.round(accuracy)}m`);
+    return {lat: latitude, lng: longitude, accuracy};
+  }catch(e){
+    $("geoStatus").textContent = `Hata: ${e.message || e}`;
+    log(`Konum HATA: ${e.message || e}`);
+    throw new Error("Konum izni verilmedi / alınamadı. İşlem durduruldu.");
+  }
+}
+
+/* ===========================
+   NAV / UI
+=========================== */
+function setPage(p){
+  state.page = p;
+  const pages = ["home","personnel","admin","setup"];
+  for(const x of pages){
+    $("page-"+x).classList.toggle("hide", x!==p);
+    document.querySelector(`.nav button[data-page="${x}"]`)?.classList.toggle("active", x===p);
+  }
+  const titles = {home:["Ana Sayfa","Giriş ve durum"], personnel:["Personel","Mesai ve çizelge"], admin:["Admin Paneli","Kullanıcı/terminal/rapor"], setup:["Kurulum","Supabase ve SQL"]};
+  $("pageTitle").textContent = titles[p][0];
+  $("pageHint").textContent = titles[p][1];
+}
+document.querySelectorAll(".nav button").forEach(b=>{
+  b.addEventListener("click", ()=> setPage(b.dataset.page));
+});
+
+function setLoginBadge(){
+  const b = $("badgeLogin");
+  if(!state.session){ b.textContent = "Giriş"; return; }
+  b.textContent = state.session.role==="admin" ? "Admin" : "Personel";
+}
+
+function setModeChip(){
+  $("chipMode").textContent = $("mode").value==="admin" ? "Admin / Personel" : "Personel";
+}
+
+/* ===========================
+   DATA LOADERS
+=========================== */
+async function refreshStats(){
+  try{
+    const users = await sbFetch("users?select=id", {});
+    const terms = await sbFetch("terminals?select=id", {});
+    const today = new Date(); today.setHours(0,0,0,0);
+    const iso = today.toISOString();
+    const shifts = await sbFetch(`shifts?select=id&started_at=gte.${encodeURIComponent(iso)}`, {});
+    $("statUsers").textContent = Array.isArray(users)? users.length : "-";
+    $("statTerms").textContent = Array.isArray(terms)? terms.length : "-";
+    $("statToday").textContent = Array.isArray(shifts)? shifts.length : "-";
+  }catch(e){
+    log("İstatistik yüklenemedi: " + e.message);
+  }
+}
+
+async function loadTerminals(){
+  state.terminals = await sbFetch("terminals?select=id,name&order=name.asc", {});
+  const sel = $("personTerminal");
+  sel.innerHTML = "";
+  sel.appendChild(new Option("Seçiniz...", ""));
+  state.terminals.forEach(t=> sel.appendChild(new Option(t.name, String(t.id))));
+  // admin selects
+  const mSel = $("mTerm"); mSel.innerHTML = ""; mSel.appendChild(new Option("Seçiniz...", ""));
+  state.terminals.forEach(t=> mSel.appendChild(new Option(t.name, String(t.id))));
+  renderTermTable();
+}
+async function loadUsers(){
+  state.users = await sbFetch("users?select=id,phone,name,role,is_active,is_owner&order=created_at.desc", {});
+  renderUserTable();
+  // report selects
+  const r = $("rUser"); r.innerHTML=""; r.appendChild(new Option("Seçiniz...", ""));
+  const m = $("mUser"); m.innerHTML=""; m.appendChild(new Option("Seçiniz...", ""));
+  state.users.filter(u=>u.role==="personnel").forEach(u=>{
+    r.appendChild(new Option(`${u.name} (${u.phone})`, String(u.id)));
+    m.appendChild(new Option(`${u.name} (${u.phone})`, String(u.id)));
+  });
+}
+
+/* ===========================
+   AUTH (APP-LEVEL)
+   - Not: Bu demo, Supabase Auth kullanmaz; users tablosu üzerinden PIN kontrol eder.
+=========================== */
+async function login(){
+  const mode = $("mode").value;
+  const phone = normPhone($("phone").value);
+  const pin = String($("pin").value || "").trim();
+  hideAlert($("homeAlert"));
+
+  if(!phone) return showAlert($("homeAlert"), "Telefon zorunlu.");
+  if(!pin) return showAlert($("homeAlert"), "PIN zorunlu.");
+
+  // users tablosunda tam eşleşme arıyoruz (telefon formatı normalize edilmiş olmalı)
+  const rows = await sbFetch(`users?select=id,phone,name,role,pin,is_owner,is_active&phone=eq.${encodeURIComponent(phone)}&limit=2`, {});
+  if(!Array.isArray(rows) || rows.length===0) return showAlert($("homeAlert"), "Bu telefon kayıtlı değil.", "warn");
+  if(rows.length>1) return showAlert($("homeAlert"), "Bu telefon için birden fazla kayıt var. DB'de duplicate var.", "warn");
+
+  const u = rows[0];
+  if(!u.is_active) return showAlert($("homeAlert"), "Bu kullanıcı pasif.", "warn");
+
+  if(u.pin !== pin) return showAlert($("homeAlert"), "PIN hatalı.", "warn");
+  if(mode==="admin" && u.role!=="admin") return showAlert($("homeAlert"), "Admin panel için admin girişi gerekli.", "warn");
+
+  state.session = { userId: u.id, role: u.role, phone: u.phone, name: u.name, isOwner: !!u.is_owner };
+  state.userRow = u;
+  localStorage.setItem(LS.SESSION, JSON.stringify(state.session));
+  setLoginBadge();
+  $("meChip").textContent = `${u.name} • ${u.phone}`;
+  $("adminChip").textContent = `${u.name}${u.is_owner ? " 👑" : ""}`;
+  log(`Giriş OK: ${u.name} (${u.role})`);
+
+  // load data
+  await Promise.allSettled([loadTerminals(), loadUsers(), refreshStats()]);
+  await refreshActiveShift();
+
+  // route user
+  if(u.role==="admin") setPage("admin"); else setPage("personnel");
+  showAlert($("homeAlert"), "Giriş başarılı.", "ok");
+}
+
+function logout(){
+  state.session = null;
+  state.userRow = null;
+  state.activeShift = null;
+  localStorage.removeItem(LS.SESSION);
+  setLoginBadge();
+  $("meChip").textContent = "-";
+  $("adminChip").textContent = "-";
+  $("shiftChip").textContent = "-";
+  log("Çıkış yapıldı.");
+  setPage("home");
+}
+
+/* ===========================
+   SHIFTS (start/stop + list)
+=========================== */
+async function refreshActiveShift(){
+  if(!state.session) return;
+  const uid = state.session.userId;
+  const rows = await sbFetch(`shifts?select=id,started_at,ended_at,terminal_id,start_lat,start_lng,end_lat,end_lng,start_accuracy,end_accuracy&user_id=eq.${uid}&ended_at=is.null&order=started_at.desc&limit=1`, {});
+  state.activeShift = (Array.isArray(rows) && rows.length) ? rows[0] : null;
+  $("shiftChip").textContent = state.activeShift ? `Devam ediyor • ${fmtTime(state.activeShift.started_at)}` : "Kapalı";
+}
+
+async function startShift(){
+  hideAlert($("personAlert"));
+  if(!state.session) return showAlert($("personAlert"), "Önce giriş yap.", "warn");
+  if(state.session.role!=="personnel") return showAlert($("personAlert"), "Bu ekran personel içindir.", "warn");
+  if(state.activeShift) return showAlert($("personAlert"), "Zaten açık mesai var.", "warn");
+
+  const termId = $("personTerminal").value;
+  if(!termId) return showAlert($("personAlert"), "Terminal seç.", "warn");
+
+  // Katı kural: Konum izni yoksa başlatma yok.
+  const g = await requireGeo();
+
+  const now = new Date().toISOString();
+  const body = {
+    user_id: state.session.userId,
+    terminal_id: Number(termId),
+    started_at: now,
+    start_lat: g.lat,
+    start_lng: g.lng,
+    start_accuracy: g.accuracy
+  };
+  // insert
+  const inserted = await sbFetch("shifts?select=id,started_at&return=representation", { method:"POST", body });
+  log("Mesai başlatıldı.");
+  showAlert($("personAlert"), "Mesai başlatıldı.", "ok");
+  await refreshActiveShift();
+  await refreshPersonnelTable();
+}
+
+async function stopShift(){
+  hideAlert($("personAlert"));
+  if(!state.session) return showAlert($("personAlert"), "Önce giriş yap.", "warn");
+  if(state.session.role!=="personnel") return showAlert($("personAlert"), "Bu ekran personel içindir.", "warn");
+  if(!state.activeShift) return showAlert($("personAlert"), "Açık mesai yok.", "warn");
+
+  const g = await requireGeo();
+  const now = new Date().toISOString();
+
+  // update by id
+  await sbFetch(`shifts?id=eq.${state.activeShift.id}`, { method:"PATCH", body: { ended_at: now, end_lat: g.lat, end_lng: g.lng, end_accuracy: g.accuracy }});
+  log("Mesai bitirildi.");
+  showAlert($("personAlert"), "Mesai bitirildi.", "ok");
+  await refreshActiveShift();
+  await refreshPersonnelTable();
+}
+
+async function refreshPersonnelTable(){
+  if(!state.session) return;
+  const uid = state.session.userId;
+  const from = $("pFrom").value;
+  const to = $("pTo").value;
+  // default last 14 days
+  const d0 = new Date(); d0.setDate(d0.getDate()-14);
+  const d1 = new Date();
+  const fromIso = from ? new Date(from+"T00:00:00").toISOString() : d0.toISOString();
+  const toIso = to ? new Date(to+"T23:59:59").toISOString() : d1.toISOString();
+
+  const rows = await sbFetch(`shifts?select=id,started_at,ended_at&user_id=eq.${uid}&started_at=gte.${encodeURIComponent(fromIso)}&started_at=lte.${encodeURIComponent(toIso)}&order=started_at.desc&limit=200`, {});
+  const tb = $("pTable").querySelector("tbody");
+  tb.innerHTML = "";
+  (rows||[]).forEach(r=>{
+    const st = new Date(r.started_at);
+    const en = r.ended_at ? new Date(r.ended_at) : null;
+    const dur = en ? (en - st) : 0;
+    const lunch = en ? calcLunch(dur) : 0;
+    const net = en ? (dur - lunch) : 0;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${fmtDate(st)}</td>
+      <td>${fmtTime(st)}</td>
+      <td>${en ? fmtTime(en) : '<span class="chip warn">Açık</span>'}</td>
+      <td>${en ? msToHM(net) : '-'}</td>
+      <td>${en ? (lunch ? '1sa' : '0') : '-'}</td>
+    `;
+    tb.appendChild(tr);
+  });
+}
+
+/* ===========================
+   ADMIN: USERS & TERMINALS
+=========================== */
+function requireAdmin(){
+  if(!state.session || state.session.role!=="admin") throw new Error("Admin yetkisi gerekli.");
+}
+
+function renderUserTable(){
+  const tb = $("uTable").querySelector("tbody");
+  tb.innerHTML = "";
+  state.users.forEach(u=>{
+    const tr = document.createElement("tr");
+    const activeChip = u.is_active ? '<span class="chip good">Aktif</span>' : '<span class="chip bad">Pasif</span>';
+    const crown = u.is_owner ? " 👑" : "";
+    tr.innerHTML = `
+      <td>${u.name}${crown}</td>
+      <td style="font-family:var(--mono)">${u.phone}</td>
+      <td><span class="chip">${u.role}</span></td>
+      <td>${activeChip}</td>
+      <td>
+        <button class="btn" data-act="toggle" data-id="${u.id}">${u.is_active ? "Pasifleştir" : "Aktifleştir"}</button>
+      </td>`;
+    tb.appendChild(tr);
+  });
+
+  tb.querySelectorAll("button[data-act='toggle']").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
       try{
-        if('serviceWorker' in navigator){
-          const reg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
-          pwaDot.className = 'badge ok';
-          pwaDot.textContent = '•';
-          pwaText.textContent = 'Service Worker aktif';
-          window.__swreg = reg;
-        } else {
-          pwaDot.className = 'badge warn';
-          pwaText.textContent = 'Service Worker desteklenmiyor';
-        }
-      }catch(err){
-        pwaDot.className = 'badge bad';
-        pwaText.textContent = 'Service Worker hata';
-        console.warn(err);
+        requireAdmin();
+        const id = Number(btn.dataset.id);
+        const u = state.users.find(x=>x.id===id);
+        await sbFetch(`users?id=eq.${id}`, { method:"PATCH", body: { is_active: !u.is_active }});
+        log("Kullanıcı güncellendi.");
+        await loadUsers();
+      }catch(e){
+        showAlert($("adminAlert"), e.message, "warn");
       }
-    })();
-
-    document.getElementById('btnHardRefresh').addEventListener('click', async () => {
-      try{
-        if (window.__swreg) await window.__swreg.unregister();
-        if (window.caches) {
-          const keys = await caches.keys();
-          await Promise.all(keys.map(k => caches.delete(k)));
-        }
-      }catch(_){}
-      location.reload(true);
     });
-  </script>
+  });
+}
+
+async function addUser(){
+  try{
+    requireAdmin();
+    hideAlert($("adminAlert"));
+    const phone = normPhone($("aPhone").value);
+    const name = ($("aName").value || "").trim();
+    const role = $("aRole").value;
+    const pin = String(($("aPin").value || "")).trim() || (phone.slice(-4));
+    if(!phone || phone.length < 10) return showAlert($("adminAlert"), "Telefon hatalı.", "warn");
+    if(!name) return showAlert($("adminAlert"), "İsim zorunlu.", "warn");
+
+    // Upsert: aynı telefon varsa update yok; biz insert deniyoruz
+    await sbFetch("users", { method:"POST", body: { phone, name, role, pin, is_owner:false, is_active:true }});
+    log(`Kullanıcı eklendi: ${name}`);
+    showAlert($("adminAlert"), "Kullanıcı eklendi.", "ok");
+    $("aPhone").value=""; $("aName").value=""; $("aPin").value="";
+    await loadUsers();
+    await refreshStats();
+  }catch(e){
+    showAlert($("adminAlert"), e.message, "warn");
+  }
+}
+
+function renderTermTable(){
+  const tb = $("tTable").querySelector("tbody");
+  tb.innerHTML = "";
+  state.terminals.forEach(t=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${t.name}</td><td><button class="btn danger" data-id="${t.id}">Sil</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll("button").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      try{
+        requireAdmin();
+        const id = Number(btn.dataset.id);
+        await sbFetch(`terminals?id=eq.${id}`, { method:"DELETE" });
+        log("Terminal silindi.");
+        await loadTerminals();
+        await refreshStats();
+      }catch(e){
+        showAlert($("adminAlert"), e.message, "warn");
+      }
+    });
+  });
+}
+
+async function addTerminal(){
+  try{
+    requireAdmin();
+    hideAlert($("adminAlert"));
+    const name = ($("tName").value || "").trim();
+    if(!name) return showAlert($("adminAlert"), "Terminal adı zorunlu.", "warn");
+    await sbFetch("terminals", { method:"POST", body: { name }});
+    $("tName").value="";
+    log("Terminal eklendi.");
+    await loadTerminals();
+    await refreshStats();
+  }catch(e){
+    showAlert($("adminAlert"), e.message, "warn");
+  }
+}
+
+/* ===========================
+   ADMIN: REPORT + LOCATION SIDE VIEW
+=========================== */
+async function runReport(){
+  try{
+    requireAdmin();
+    const userId = $("rUser").value;
+    const from = $("rFrom").value;
+    const to = $("rTo").value;
+    if(!userId) return showAlert($("adminAlert"), "Personel seç.", "warn");
+    if(!from || !to) return showAlert($("adminAlert"), "Tarih aralığı seç.", "warn");
+
+    const fromIso = new Date(from+"T00:00:00").toISOString();
+    const toIso = new Date(to+"T23:59:59").toISOString();
+
+    const rows = await sbFetch(`shifts?select=id,started_at,ended_at,manual,start_lat,start_lng,end_lat,end_lng,start_accuracy,end_accuracy&user_id=eq.${userId}&started_at=gte.${encodeURIComponent(fromIso)}&started_at=lte.${encodeURIComponent(toIso)}&order=started_at.desc&limit=400`, {});
+    const tb = $("rTable").querySelector("tbody");
+    tb.innerHTML = "";
+    (rows||[]).forEach(r=>{
+      const st = new Date(r.started_at);
+      const en = r.ended_at ? new Date(r.ended_at) : null;
+      const dur = en ? (en - st) : 0;
+      const lunch = en ? calcLunch(dur) : 0;
+      const net = en ? (dur - lunch) : 0;
+
+      const loc1 = (r.start_lat!=null) ? `<a class="maplink" target="_blank" rel="noreferrer" href="${mapLink(r.start_lat,r.start_lng)}">Başlangıç</a> <span class="chip">±${Math.round(r.start_accuracy||0)}m</span>` : "-";
+      const loc2 = (r.end_lat!=null) ? `<a class="maplink" target="_blank" rel="noreferrer" href="${mapLink(r.end_lat,r.end_lng)}">Bitiş</a> <span class="chip">±${Math.round(r.end_accuracy||0)}m</span>` : "-";
+      const loc = `<div style="display:flex;flex-direction:column;gap:6px">${loc1}<span style="opacity:.6">→</span>${loc2}</div>`;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${fmtDate(st)}</td>
+        <td>${fmtTime(st)}</td>
+        <td>${en ? fmtTime(en) : '<span class="chip warn">Açık</span>'}</td>
+        <td>${en ? msToHM(net) : '-'}</td>
+        <td>${en ? (lunch ? '1sa' : '0') : '-'}</td>
+        <td>${loc}</td>
+        <td>${r.manual ? '<span class="chip warn">Evet</span>' : '-'}</td>
+      `;
+      tb.appendChild(tr);
+    });
+    showAlert($("adminAlert"), `Rapor yüklendi: ${rows.length} kayıt.`, "ok");
+  }catch(e){
+    showAlert($("adminAlert"), e.message, "warn");
+  }
+}
+
+/* ===========================
+   ADMIN: MANUAL SHIFT
+=========================== */
+function openManual(){
+  try{
+    requireAdmin();
+    $("manualBox").classList.toggle("hide");
+  }catch(e){
+    showAlert($("adminAlert"), e.message, "warn");
+  }
+}
+function closeManual(){
+  $("manualBox").classList.add("hide");
+  hideAlert($("manualAlert"));
+}
+async function saveManual(){
+  try{
+    requireAdmin();
+    hideAlert($("manualAlert"));
+    const userId = $("mUser").value;
+    const termId = $("mTerm").value || null;
+    const day = $("mDay").value;
+    const st = $("mStart").value;
+    const en = $("mEnd").value;
+    const note = ($("mNote").value||"").trim();
+
+    if(!userId || !day || !st || !en) return showAlert($("manualAlert"), "Tüm alanlar zorunlu.", "warn");
+
+    const started = new Date(`${day}T${st}:00`);
+    const ended = new Date(`${day}T${en}:00`);
+    if(!(ended>started)) return showAlert($("manualAlert"), "Bitiş, başlangıçtan sonra olmalı.", "warn");
+
+    await sbFetch("shifts", { method:"POST", body:{
+      user_id: Number(userId),
+      terminal_id: termId ? Number(termId) : null,
+      started_at: started.toISOString(),
+      ended_at: ended.toISOString(),
+      manual: true,
+      manual_by: state.session.userId,
+      manual_note: note || null
+    }});
+    showAlert($("manualAlert"), "Manuel kayıt eklendi.", "ok");
+    log("Manuel mesai eklendi.");
+  }catch(e){
+    showAlert($("manualAlert"), e.message, "warn");
+  }
+}
+
+/* ===========================
+   SETUP PAGE
+=========================== */
+const SQL_SNIPPET = `
+-- UZMAN Puantaj (Supabase) • Tek sefer çalıştır
+-- Not: Erken aşamada isen, eski tabloları temizlemek sorun olmaz.
+
+begin;
+
+drop table if exists public.shifts cascade;
+drop table if exists public.users cascade;
+drop table if exists public.terminals cascade;
+
+create table public.terminals (
+  id bigserial primary key,
+  name text not null,
+  created_at timestamptz not null default now()
+);
+
+create table public.users (
+  id bigserial primary key,
+  phone text not null unique,
+  name text not null,
+  role text not null check (role in ('personnel','admin')),
+  pin text not null,
+  terminal_id bigint references public.terminals(id) on delete set null,
+  is_owner boolean not null default false,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create table public.shifts (
+  id bigserial primary key,
+  user_id bigint not null references public.users(id) on delete cascade,
+  terminal_id bigint references public.terminals(id) on delete set null,
+  started_at timestamptz not null,
+  ended_at timestamptz,
+  start_lat double precision,
+  start_lng double precision,
+  end_lat double precision,
+  end_lng double precision,
+  start_accuracy double precision,
+  end_accuracy double precision,
+  manual boolean not null default false,
+  manual_by bigint references public.users(id) on delete set null,
+  manual_note text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_shifts_user_started on public.shifts(user_id, started_at desc);
+
+-- MVP için RLS kapalı (client'tan rahat yazabilsin)
+alter table public.terminals disable row level security;
+alter table public.users disable row level security;
+alter table public.shifts disable row level security;
+
+commit;
+
+-- Admin seed (telefona sadece rakam giriyoruz: 90xxxxxxxxxx)
+-- NOT: PIN kuralları burada çapraz olacak şekilde örneklenmiştir.
+insert into public.users (phone, name, role, pin, is_owner, is_active)
+values
+  ('905432234916', 'Beytullah', 'admin', '3204', true, true),
+  ('905368373204', 'Beytullah', 'admin', '4916', true, true)
+on conflict (phone) do nothing;
+
+-- 1-2 terminal ekleyebilirsin
+insert into public.terminals (name)
+values ('Derince Terminali'), ('Antalya Terminali')
+on conflict do nothing;
+`.trim();
+
+function fillSetup(){
+  $("sbUrl").value = localStorage.getItem(LS.SB_URL) || DEFAULTS.SB_URL || "";
+  $("sbKey").value = localStorage.getItem(LS.SB_KEY) || DEFAULTS.SB_KEY || "";
+  $("sqlBox").textContent = SQL_SNIPPET;
+}
+
+async function saveSb(){
+  hideAlert($("setupAlert"));
+  const url = ($("sbUrl").value||"").trim();
+  const key = ($("sbKey").value||"").trim();
+  if(!url || !key) return showAlert($("setupAlert"), "URL ve Key zorunlu.", "warn");
+  localStorage.setItem(LS.SB_URL, url);
+  localStorage.setItem(LS.SB_KEY, key);
+  log("Kurulum kaydedildi.");
+  showAlert($("setupAlert"), "Kaydedildi.", "ok");
+  await refreshStats();
+}
+
+async function testSb(){
+  hideAlert($("setupAlert"));
+  try{
+    await refreshStats();
+    showAlert($("setupAlert"), "Bağlantı OK (tablolar okunabiliyor).", "ok");
+  }catch(e){
+    showAlert($("setupAlert"), e.message, "warn");
+  }
+}
+
+/* ===========================
+   PWA
+=========================== */
+async function setupSW(){
+  if(!("serviceWorker" in navigator)) return;
+  try{
+    const reg = await navigator.serviceWorker.register("./sw.js");
+    $("swText").textContent = "Service Worker aktif";
+    $("swDot").style.background = "rgba(22,163,74,.9)";
+    log("SW kayıt OK.");
+  }catch(e){
+    $("swText").textContent = "Service Worker hatalı";
+    $("swDot").style.background = "rgba(239,68,68,.9)";
+    log("SW hata: " + e.message);
+  }
+}
+
+$("btnHardRefresh").addEventListener("click", async ()=>{
+  // Cache temizle + reload
+  try{
+    if("caches" in window){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+    log("Cache temizlendi, yenileniyor...");
+  }catch(e){}
+  location.reload(true);
+});
+
+/* ===========================
+   EVENTS
+=========================== */
+$("mode").addEventListener("change", ()=>{ setModeChip(); });
+$("btnLogin").addEventListener("click", ()=> login().catch(e=> showAlert($("homeAlert"), e.message, "warn")));
+$("btnLogout").addEventListener("click", logout);
+$("btnGeoTest").addEventListener("click", async ()=>{
+  try{ await requireGeo(); }catch(e){}
+});
+$("btnStart").addEventListener("click", ()=> startShift().catch(e=> showAlert($("personAlert"), e.message, "warn")));
+$("btnStop").addEventListener("click", ()=> stopShift().catch(e=> showAlert($("personAlert"), e.message, "warn")));
+$("btnPRefresh").addEventListener("click", ()=> refreshPersonnelTable().catch(e=> showAlert($("personAlert"), e.message, "warn")));
+
+$("btnAddUser").addEventListener("click", addUser);
+$("btnRefreshUsers").addEventListener("click", ()=> loadUsers().catch(e=> showAlert($("adminAlert"), e.message, "warn")));
+$("btnAddTerm").addEventListener("click", addTerminal);
+$("btnRefreshTerms").addEventListener("click", ()=> loadTerminals().catch(e=> showAlert($("adminAlert"), e.message, "warn")));
+$("btnReport").addEventListener("click", runReport);
+$("btnManualOpen").addEventListener("click", openManual);
+$("btnManualClose").addEventListener("click", closeManual);
+$("btnManualSave").addEventListener("click", saveManual);
+
+$("btnSaveSb").addEventListener("click", saveSb);
+$("btnTestSb").addEventListener("click", testSb);
+
+/* ===========================
+   BOOT
+=========================== */
+function restoreSession(){
+  try{
+    const s = localStorage.getItem(LS.SESSION);
+    if(!s) return;
+    state.session = JSON.parse(s);
+    setLoginBadge();
+    log("Oturum geri yüklendi.");
+  }catch(e){}
+}
+async function boot(){
+  $("subline").textContent = `PWA • Canlı sürüm (Supabase) • ${APP_VERSION}`;
+  fillSetup();
+  setModeChip();
+  restoreSession();
+  await setupSW();
+  // prefill dates
+  const today = new Date();
+  const d14 = new Date(); d14.setDate(today.getDate()-14);
+  $("pFrom").value = d14.toISOString().slice(0,10);
+  $("pTo").value = today.toISOString().slice(0,10);
+  $("rFrom").value = d14.toISOString().slice(0,10);
+  $("rTo").value = today.toISOString().slice(0,10);
+  $("mDay").value = today.toISOString().slice(0,10);
+
+  try{
+    await Promise.allSettled([loadTerminals(), loadUsers(), refreshStats()]);
+  }catch(e){}
+  if(state.session){
+    // fetch current user from DB again (in case changes)
+    try{
+      const urows = await sbFetch(`users?select=id,phone,name,role,is_owner,is_active,pin&phone=eq.${encodeURIComponent(state.session.phone)}&limit=1`, {});
+      if(urows && urows[0]){
+        state.userRow = urows[0];
+        $("meChip").textContent = `${state.userRow.name} • ${state.userRow.phone}`;
+        $("adminChip").textContent = `${state.userRow.name}${state.userRow.is_owner ? " 👑" : ""}`;
+        await refreshActiveShift();
+        if(state.userRow.role==="admin") setPage("admin"); else setPage("personnel");
+      }else{
+        logout();
+      }
+    }catch(e){
+      log("Oturum doğrulanamadı: " + e.message);
+    }
+  }
+}
+boot();
+</script>
 </body>
 </html>
